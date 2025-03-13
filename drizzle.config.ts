@@ -10,3 +10,11 @@ export default defineConfig({
     url: process.env.POSTGRES_URL!,
   },
 });
+// export default {
+//   out: "./server/migrations",
+//   schema: "./server/schema.ts",
+//   dialect: "postgresql",
+//   dbCredentials: {
+//     connectionString: process.env.POSTGRES_URL!,
+//   },
+// } satisfies Config;
