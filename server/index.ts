@@ -8,6 +8,6 @@ dotenv.config({
     path: ".env",
 });
 
-const sql = neon(process.env.POSTGRES_URL!);
+const sql = neon("postgresql://neondb_owner:npg_v5YESXmg4HtO@ep-fancy-credit-a1tf76ms-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require");
 export const db = drizzle(sql, {schema});
 

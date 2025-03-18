@@ -1,11 +1,10 @@
-"use client";
+// "use client";
 
 import { auth } from "@/lib/auth";
 import { UserButton } from "./user-button";
 
 export default async function Nav() {
-  const session = await auth // ini masih gatau
-
+  // const session = auth;
 
   return (
     <header className="bg-slate-500 py-4">
@@ -14,7 +13,7 @@ export default async function Nav() {
           <li>Logo</li>
           <li>
             
-            
+            <UserButton/>
           </li>
         </ul>
       </nav>
