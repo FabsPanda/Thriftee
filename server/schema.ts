@@ -19,6 +19,7 @@ export const user = pgTable("user", {
   name: text("name"),
   email: text("email").notNull(),
   emailVerified: boolean("emailVerified"),
+  emailVerifiedDate: timestamp("emailVerifiedDate", { mode: "date" }),
   image: text("image"),
   password: text("password"),
   twoFactorEnabled: boolean("twoFactorEnabled").default(false),

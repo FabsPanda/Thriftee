@@ -176,6 +176,20 @@
       "when": 1744117100121,
       "tag": "0024_numerous_stark_industries",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1744182736153,
+      "tag": "0025_open_masque",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1744182933229,
+      "tag": "0026_small_master_mold",
+      "breakpoints": true
     }
   ]
 }
