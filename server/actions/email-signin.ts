@@ -49,7 +49,7 @@ export const emailSignIn = actionClient
         throw new Error(error.message);
       }
   
-      return { success: true };
+      // return { success: true };
     } catch (err: any) {
       return { error: err.message || "Something went wrong" };
     }
