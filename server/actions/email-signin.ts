@@ -39,6 +39,22 @@ export const emailSignIn = actionClient
     //   redirectTo: "/",
     // });
 
+    try {
+      const { data, error } = await signIn.email({
+        email,
+        password,
+      });
+  
+      if (error) {
+        throw new Error(error.message);
+      }
+  
+      return { success: true };
+    } catch (err: any) {
+      return { error: err.message || "Something went wrong" };
+    }
+    
+
     return { success: email };
     }catch(error){
       console.log(error);

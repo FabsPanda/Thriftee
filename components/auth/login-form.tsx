@@ -17,11 +17,12 @@ import * as z from "zod";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { emailSignIn } from "@/server/actions/email-signin";
+import { useAction } from "next-safe-action/hooks";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { FormSuccess } from "./form-success";
 import { FormError } from "./form-error";
-import { signIn } from "./auth-client";
 
 export const LoginForm = () => {
   const form = useForm({
@@ -34,32 +35,20 @@ export const LoginForm = () => {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
-    setError("");
-    setSuccess("");
-    setIsLoading(true);
-    
-    try {
-      const result = await signIn({
-        email: values.email,
-        password: values.password
-      });
-      
-      if (result.error) {
-        setError(result.error);
-      } else {
-        setSuccess("Login successful!");
-        // You might want to redirect here or handle the successful login
-      }
-    } catch (err) {
-      setError("An unexpected error occurred");
-    } finally {
-      setIsLoading(false);
+
+  const { execute, status } = useAction(emailSignIn, {
+    onSuccess(data){
+      console.log(data);
+    },
+    onError(err) {
+      setError("Login failed. Please try again.");
     }
-  };
+  });
 
+  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+    execute(values);
+  };
   return (
     <AuthCard
       cardTitle="Welcome back!"
@@ -83,7 +72,6 @@ export const LoginForm = () => {
                         placeholder="krisdy@gmail.com"
                         type="email"
                         autoComplete="email"
-                        disabled={isLoading}
                       />
                     </FormControl>
                     <FormDescription />
@@ -103,7 +91,6 @@ export const LoginForm = () => {
                         placeholder="*********"
                         type="password"
                         autoComplete="current-password"
-                        disabled={isLoading}
                       />
                     </FormControl>
                     <FormDescription />
@@ -121,11 +108,10 @@ export const LoginForm = () => {
               type="submit"
               className={cn(
                 "w-full",
-                isLoading ? "animate-pulse" : ""
+                status === "executing" ? "animate-pulse" : ""
               )}
-              disabled={isLoading}
             >
-              {isLoading ? "Signing in..." : "Login"}
+              {"Login"}
             </Button>
           </form>
         </Form>
