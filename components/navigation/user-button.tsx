@@ -1,11 +1,112 @@
-'use client'
+// "use client";
 
-import { Session } from "better-auth"
+// import { signOut, useSession } from "@/lib/auth-client"; // Import your custom useSession hook
+// import { Button } from "../ui/button";
+// import Link from "next/link";
+// import { LogIn } from "lucide-react";
 
-export const UserButton = ({userId}: Session) => {
+// export const UserButton = () => {
+//   // Call the useSession hook to get the session data
+//   const session = useSession();
+
+//   // Extract the userId from the session
+//   const userId = session?.data?.user.email;
+
+//   return (
+//     <div>
+//       {!session ? (
+//         <Button>
+//           <Link href="/auth/login">
+//             <LogIn />
+//             <span>Login</span>
+//           </Link>
+//         </Button>
+//       ) : (
+//         <div>
+//           <h1>{userId}</h1>
+//           <button onClick={() => signOut()}>sign out</button>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// "use client";
+
+// import { signOut, useSession } from "@/lib/auth-client"; // Import your custom useSession hook
+// import { Button } from "../ui/button";
+// import Link from "next/link";
+// import { LogIn } from "lucide-react";
+// import { useEffect } from "react"; // Import useEffect untuk memantau perubahan sesi
+
+// export const UserButton = () => {
+//   // Call the useSession hook to get the session data
+//   const { data: session,status } = useSession();
+
+//   useEffect(() => {
+//     // Memastikan komponen merender ulang setelah sesi diperbarui
+//     if (status === "unauthenticated") {
+//       // Memperbarui tampilan setelah signOut berhasil
+//       window.location.reload();
+//     }
+//   }, [status]); // Ketika status sesi berubah, trigger effect ini
+
+//   const userId = session?.data?.user.email;
+
+//   return (
+//     <div>
+//       {!session ? (
+//         <Button>
+//           <Link href="/auth/login">
+//             <LogIn />
+//             <span>Login</span>
+//           </Link>
+//         </Button>
+//       ) : (
+//         <div>
+//           <h1>{userId}</h1>
+//           <button onClick={() => signOut()}>sign out</button>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+"use client";
+
+import { signOut, useSession } from "@/lib/auth-client"; // Import your custom useSession hook
+import { Button } from "../ui/button";
+import Link from "next/link";
+import { LogIn } from "lucide-react";
+
+export const UserButton = () => {
+  // Call the useSession hook to get the session data
+  const { data: sessionData, isPending, error, refetch } = useSession();
+
+  // Extract userId from sessionData
+  const userId = sessionData?.user?.email;
+
+  // Handle sign out and refetch session data
+  const handleSignOut = async () => {
+    await signOut(); // Call signOut
+    refetch(); // Refetch session after signOut
+  };
+
   return (
     <div>
-      <h1>user btn</h1>
+      {!sessionData ? (
+        <Button asChild>
+          <Link className="flex-gap-2" href="/auth/login">
+            <LogIn size={16}/>
+            <span>Login</span>
+          </Link>
+        </Button>
+      ) : (
+        <div>
+          <h1>{userId}</h1>
+          <button onClick={handleSignOut}>Sign out</button>
+        </div>
+      )}
     </div>
   );
 };
