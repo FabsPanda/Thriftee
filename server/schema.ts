@@ -4,16 +4,26 @@ import {
   integer,
   timestamp,
   boolean,
+  pgEnum,
+  primaryKey,
 } from "drizzle-orm/pg-core";
+import { createId } from "@paralleldrive/cuid2";
+
+export const RoleEnum = pgEnum("roles", ["user", "admin"]);
 
 export const user = pgTable("user", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").notNull().unique(),
-  emailVerified: boolean("email_verified").notNull(),
+  id: text("id")
+    .notNull()
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  name: text("name"),
+  email: text("email").notNull(),
+  emailVerified: boolean("emailVerified"),
+  emailVerifiedDate: timestamp("emailVerifiedDate", { mode: "date" }),
   image: text("image"),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull(),
+  password: text("password"),
+  twoFactorEnabled: boolean("twoFactorEnabled").default(false),
+  role: RoleEnum("roles").default("user"),
 });
 
 export const session = pgTable("session", {
@@ -47,11 +57,22 @@ export const account = pgTable("account", {
   updatedAt: timestamp("updated_at").notNull(),
 });
 
-export const verification = pgTable("verification", {
-  id: text("id").primaryKey(),
-  identifier: text("identifier").notNull(),
-  value: text("value").notNull(),
-  expiresAt: timestamp("expires_at").notNull(),
-  createdAt: timestamp("created_at"),
-  updatedAt: timestamp("updated_at"),
-});
+export const verification = pgTable(
+  "verification",
+  {
+    id: text("id")
+      .notNull()
+      .$defaultFn(() => createId()),
+    token: text("token").notNull(),
+    email: text("email").notNull(),
+    identifier: text("identifier"),
+    value: text("value"),
+    expiresAt: timestamp("expires_at"),
+    createdAt: timestamp("created_at"),
+    updatedAt: timestamp("updated_at"),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+  },
+  (vt) => ({
+    compoundKey: primaryKey({ columns: [vt.id, vt.token] }),
+  })
+);
