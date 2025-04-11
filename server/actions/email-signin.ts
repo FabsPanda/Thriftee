@@ -32,12 +32,6 @@ export const emailSignIn = actionClient
     //   return { success: "Confirmation Email Sent" };
     // }
 
-    // await signIn("credentials", {
-    //   email,
-    //   password,
-    //   redirectTo: "/",
-    // });
-
     try {
 
       const { data, error } = await signIn.email({
