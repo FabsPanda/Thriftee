@@ -16,22 +16,21 @@ export const emailSignIn = actionClient
       const existingUser = await db.query.user.findFirst({
       where: eq(user.email, email),
     });
-
     if (existingUser?.email !== email) {
       return { error: "Email not found" };
     }
 
     //user not verified
-    if (!existingUser.emailVerifiedDate) {
-      const verificationToken = await generateEmailVerificationToken(
-        existingUser.email
-      );
-      await sendVerificationEmail(
-        verificationToken[0].email,
-        verificationToken[0].token
-      );
-      return { success: "Confirmation Email Sent" };
-    }
+    // if (!existingUser.emailVerifiedDate) {
+    //   const verificationToken = await generateEmailVerificationToken(
+    //     existingUser.email
+    //   );
+    //   await sendVerificationEmail(
+    //     verificationToken[0].email,
+    //     verificationToken[0].token
+    //   );
+    //   return { success: "Confirmation Email Sent" };
+    // }
 
     // await signIn("credentials", {
     //   email,
@@ -40,20 +39,25 @@ export const emailSignIn = actionClient
     // });
 
     try {
+
       const { data, error } = await signIn.email({
         email,
         password,
       });
   
       if (error) {
+        console.log("gagal");
         throw new Error(error.message);
       }
   
       // return { success: true };
     } catch (err: any) {
+      console.log("gagal2");
       return { error: err.message || "Something went wrong" };
     }
     
+    // console.log(email);
+    // console.log(password);
 
     return { success: email };
     }catch(error){

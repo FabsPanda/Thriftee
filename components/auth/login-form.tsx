@@ -39,6 +39,7 @@ export const LoginForm = () => {
 
   const { execute, status } = useAction(emailSignIn, {
     onSuccess(data){
+      console.log("Login success!");
       console.log(data);
     },
     onError(err) {
