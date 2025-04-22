@@ -74,27 +74,27 @@
 
 "use client";
 
-import { signOut, useSession } from "@/lib/auth-client"; // Import your custom useSession hook
+// import { signOut, useSession } from "@/lib/auth-client"; 
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { LogIn } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+// import { Session } from "better-auth";
 
-export const UserButton = () => {
-  // Call the useSession hook to get the session data
-  const { data: sessionData, isPending, error, refetch } = useSession();
 
-  // Extract userId from sessionData
-  const userId = sessionData?.user?.email;
-
-  // Handle sign out and refetch session data
+export const UserButton = ({ user }: any) => {
+  // Extract userId from passed data
+  const userId = user?.email;
+  // console.log(userId);
+  // Handle sign out
   const handleSignOut = async () => {
-    await signOut(); // Call signOut
-    refetch(); // Refetch session after signOut
+    await authClient.signOut(); // Call signOut
+    window.location.reload(); // Simple reload to update the UI
   };
 
   return (
     <div>
-      {!sessionData ? (
+      {!user ? (
         <Button asChild>
           <Link className="flex-gap-2" href="/auth/login">
             <LogIn size={16}/>

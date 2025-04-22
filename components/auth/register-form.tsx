@@ -23,8 +23,10 @@ import { useState } from "react";
 import { emailRegister } from "@/server/actions/email-register";
 import { FormSuccess } from "./form-success";
 import { FormError } from "./form-error";
+import { useRouter } from "next/navigation";
 
 export const RegisterForm = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
@@ -39,7 +41,11 @@ export const RegisterForm = () => {
   const { execute, status } = useAction(emailRegister, {
     onSuccess(data) {
       if (data.data?.error) setError(data.data.error);
-      if (data.data?.success) setSuccess(data.data.success);
+      if (data.data?.success) {
+        setSuccess(data.data.success);
+        // Redirect to login page after successful registration (optional)
+        router.push("/auth/login");
+      }
     },
   });
 
@@ -47,6 +53,30 @@ export const RegisterForm = () => {
     console.log("before server action runs");
     execute(values);
   };
+
+  // async function onSubmit(values: z.infer<typeof RegisterSchema>){
+  //   console.log("before server action runs");
+  //   const { name, email, password } = values;
+  //   const { data, error } = await authClient.signUp.email({
+  //     email,
+  //     password,
+  //     name,
+  //     callbackURL: "/auth/login",
+  //   }, {
+  //     onRequest: () => {
+  //       // toast({
+  //       //   title: "Please wait"
+  //       // })
+  //     },
+  //     onSuccess: () => {
+  //       form.reset();
+  //     },
+  //     onError: (ctx) => {
+  //       alert(ctx.error.message);
+  //     }
+  //   })
+  // };
+
   return (
     <AuthCard
       cardTitle="Create an Account 🎉"

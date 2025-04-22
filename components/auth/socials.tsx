@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { signIn } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 
@@ -12,7 +12,7 @@ export default function Socials() {
         variant={"outline"}
         className="flex gap-4 w-full"
         onClick={async () => {
-          await signIn.social({
+          await authClient.signIn.social({
             provider: "google",
             callbackURL: "/",
           });
@@ -25,7 +25,7 @@ export default function Socials() {
         variant={"outline"}
         className="flex gap-4 w-full"
         onClick={async () => {
-          await signIn.social({
+          await authClient.signIn.social({
             provider: "github",
             callbackURL: "/",
           });

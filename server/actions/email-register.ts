@@ -8,7 +8,7 @@ import { eq } from "drizzle-orm";
 import { generateEmailVerificationToken } from "./tokens";
 import { user } from "../schema";
 import { sendVerificationEmail } from "./emails";
-import { signUp } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
 
 export const emailRegister = actionClient
   .schema(RegisterSchema)
@@ -38,10 +38,11 @@ export const emailRegister = actionClient
     //return { success: "done" };
 
     //logic buat user yang gak registered
-    const { error } = await signUp.email({
+    const { error } = await authClient.signUp.email({
       email,
       name,
       password,
+      callbackURL: "/auth/login"
     });
 
 

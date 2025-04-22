@@ -7,7 +7,8 @@ import { eq } from "drizzle-orm";
 import { user } from "../schema";
 import { generateEmailVerificationToken } from "./tokens";
 import { sendVerificationEmail } from "./emails";
-import { signIn } from "@/lib/auth-client";
+// import { signIn } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
 
 export const emailSignIn = actionClient
   .schema(LoginSchema)
@@ -31,16 +32,17 @@ export const emailSignIn = actionClient
       //   return { success: "Confirmation Email Sent" };
       // }
 
-      const { error } = await signIn.email({
+      const { data,error } = await authClient.signIn.email({
         email,
         password,
+        callbackURL:"/"
       });
 
       if (error) {
         return { error: error.message };
       }
-
-      return { success: "Login successful!" };
+      console.log(data);
+      return { success: "Login successful!", redirectTo: "/" };
     } catch (err: any) {
       console.error("Login error:", err);
       return { error: err?.message || "Something went wrong" };
