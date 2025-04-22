@@ -17,12 +17,16 @@ import * as z from "zod";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { emailSignIn } from "@/server/actions/email-signin";
+import { useAction } from "next-safe-action/hooks";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { FormSuccess } from "./form-success";
 import { FormError } from "./form-error";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import { generateEmailVerificationToken } from "@/server/actions/tokens";
+import { sendVerificationEmail } from "@/server/actions/emails";
 
 export const LoginForm = () => {
   const router = useRouter();
@@ -38,6 +42,38 @@ export const LoginForm = () => {
   const [success, setSuccess] = useState("");
   const [status, setStatus] = useState<"idle" | "executing" | "success" | "error">("idle");
 
+  // const { execute, status } = useAction(emailSignIn, {
+  //   onSuccess(data) {
+  //     if (data.data?.success) {
+  //       authClient.signIn.email({
+  //         email: form.getValues("email"),
+  //         password: form.getValues("password"),
+  //         callbackURL: "/"
+  //       });
+        
+  //     }
+  //     if (data.data?.error) {
+  //       setError(data.data.error);
+  //       setSuccess("");
+  //     } else if (data.data?.success) {
+  //       setSuccess(data.data.success);
+  //       setError("");
+
+  //       if (data.data.redirectTo) {
+  //         router.push(data.data.redirectTo);
+  //         router.refresh();
+  //       }
+  //     }
+  //   },
+  //   onError(err) {
+  //     setError("Login failed. Please try again.");
+  //   },
+  // });
+
+  // const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+  //   execute(values);
+  // };
+
   async function onSubmit(values: z.infer<typeof LoginSchema>) {
     const { email, password } = values;
     
@@ -51,7 +87,6 @@ export const LoginForm = () => {
       const { data, error } = await authClient.signIn.email({
         email,
         password,
-        callbackURL: "/"
       });
 
       if (error) {
@@ -61,14 +96,26 @@ export const LoginForm = () => {
         return;
       }
 
-      // On success, set success message, reset form and change status to 'success'
-      setSuccess("Login successful!");
-      form.reset();
-      setStatus("success");
+      // On success, but email is not verified
+      console.log(data?.user.emailVerified);
+      if (!data?.user.emailVerified) {
+        const verificationToken = await generateEmailVerificationToken(email);
+        await sendVerificationEmail(
+          verificationToken[0].email,
+          verificationToken[0].token
+        );
+        return { success: "Confirmation Email Sent" };
+      } else {
+          // On success, set success message, reset form and change status to 'success'
+          setSuccess("Login successful!");
+          form.reset();
+          setStatus("success");
 
-      // Redirect to home after successful login
-      router.push("/");
-      router.refresh();
+          // Redirect to home after successful login
+          router.push("/");
+          router.refresh();
+      }
+
     } catch (err: any) {
       // In case of unexpected errors, handle with a generic message
       setError(err?.message || "Something went wrong");
@@ -125,21 +172,20 @@ export const LoginForm = () => {
                   </FormItem>
                 )}
               />
-
               <FormSuccess message={success} />
               <FormError message={error} />
-
               <Button size={"sm"} variant={"link"} asChild>
                 <Link href="/auth/reset">Forgot your password</Link>
               </Button>
             </div>
-
             <Button
               type="submit"
-              className={cn("w-full")}
-              disabled={status === "executing"} // Disable the button when executing
+              className={cn(
+                "w-full",
+                status === "executing" ? "animate-pulse" : ""
+              )}
             >
-              {status === "executing" ? "Logging in..." : "Login"} {/* Show 'Logging in...' when executing */}
+              {"Login"}
             </Button>
           </form>
         </Form>

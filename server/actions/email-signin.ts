@@ -32,16 +32,7 @@ export const emailSignIn = actionClient
       //   return { success: "Confirmation Email Sent" };
       // }
 
-      const { data,error } = await authClient.signIn.email({
-        email,
-        password,
-        callbackURL:"/"
-      });
 
-      if (error) {
-        return { error: error.message };
-      }
-      console.log(data);
       return { success: "Login successful!", redirectTo: "/" };
     } catch (err: any) {
       console.error("Login error:", err);
