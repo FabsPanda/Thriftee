@@ -65,17 +65,17 @@ export const verification = pgTable(
     id: text("id")
       .notNull()
       .$defaultFn(() => createId()),
-    token: text("token").notNull(),
-    email: text("email").notNull(),
+    token: text("token"),
+    email: text("email"),
     identifier: text("identifier"),
     value: text("value"),
     expiresAt: timestamp("expires_at"),
     createdAt: timestamp("created_at"),
     updatedAt: timestamp("updated_at"),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
+    expires: timestamp("expires", { mode: "date" }),
   },
   (vt) => ({
-    compoundKey: primaryKey({ columns: [vt.id, vt.token] }),
+    compoundKey: primaryKey({ columns: [vt.id] }),
   })
 );
 

@@ -101,8 +101,8 @@ export const LoginForm = () => {
       if (!data?.user.emailVerified) {
         const verificationToken = await generateEmailVerificationToken(email);
         await sendVerificationEmail(
-          verificationToken[0].email,
-          verificationToken[0].token
+          verificationToken[0].email!,
+          verificationToken[0].token!
         );
         return { success: "Confirmation Email Sent" };
       } else {

@@ -15,7 +15,6 @@ export const emailRegister = actionClient
   .action(async ({ parsedInput: { email, name, password } }) => {
     //hashing password
     // const hashedPassword = await bcrypt.hash(password, 10);
-
     //cek user yang udah ada
     const existingUser = await db.query.user.findFirst({
       where: eq(user.email, email),
@@ -23,16 +22,16 @@ export const emailRegister = actionClient
 
     // cek kalo email udah di db: 'it's in use', kalo ngga register user, tapi send verif dulu
     if (existingUser) {
-      // if (!existingUser.emailVerified) {
-      //   const verificationToken = await generateEmailVerificationToken(email);
+      if (!existingUser.emailVerified) {
+        const verificationToken = await generateEmailVerificationToken(email);
        
-      //   await sendVerificationEmail(
-      //     verificationToken[0].email,
-      //     verificationToken[0].token,
-      //   );
+        await sendVerificationEmail(
+          verificationToken[0].email!,
+          verificationToken[0].token!,
+        );
         
-      //   return { success: "Email Confirmation resent" };
-      // }
+        return { success: "Email Confirmation resent" };
+      }
       return { error: "Email already in use" };
     }
     //return { success: "done" };
@@ -50,12 +49,12 @@ export const emailRegister = actionClient
       return { error: error.message || "Registration failed at auth layer" };
     }
 
-    // const verificationToken = await generateEmailVerificationToken(email);
+    const verificationToken = await generateEmailVerificationToken(email);
 
-    // await sendVerificationEmail(
-    //   verificationToken[0].email,
-    //   verificationToken[0].token,
-    // );
+    await sendVerificationEmail(
+      verificationToken[0].email!,
+      verificationToken[0].token!,
+    );
 
     return { success: "Confirmation Email Sent!" };
   });
