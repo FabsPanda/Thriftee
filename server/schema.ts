@@ -6,6 +6,8 @@ import {
   boolean,
   pgEnum,
   primaryKey,
+  serial,
+  real,
 } from "drizzle-orm/pg-core";
 import { createId } from "@paralleldrive/cuid2";
 
@@ -107,4 +109,15 @@ export const twoFactorTokens = pgTable(
     (vt) => ({
         compoundKey: primaryKey({ columns: [vt.id, vt.token] }),
     })
+)
+
+export const products = pgTable(
+    "products",
+    {
+        id: serial('id').primaryKey(),
+        description: text('description').notNull(),
+        title: text('title').notNull(),
+        createdAt: timestamp("createdAt").defaultNow(),
+        price: real("price").notNull()
+    }
 )
