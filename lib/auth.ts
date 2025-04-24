@@ -1,6 +1,8 @@
 import {db} from '@/server'
+import { sendEmail, sendPasswordResetEmail } from '@/server/actions/emails';
 import {betterAuth, BetterAuthOptions} from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
+import { text } from 'stream/consumers';
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -32,6 +34,13 @@ export const auth = betterAuth({
   // },
   emailAndPassword: {
     enabled: true,
-    // requireEmailVerification: true
-  }
+    sendResetPassword: async ({ user, url, token }, request) => {
+      await sendEmail({
+        to: user.email,
+        subject: "Thriftee - Password Reset",
+        text: `Click here to reset your password: ${url}`,
+        html: `<p>Click <a href="${url}">here</a> to reset your password.</p>`,
+      });
+    },
+  },
 } satisfies BetterAuthOptions );

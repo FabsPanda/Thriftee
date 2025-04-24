@@ -15,6 +15,7 @@ export default async function Nav() {
   // if(!session) {
   //   return redirect('/auth/login');
   // }
+  // console.log(session?.user);
 
   return (
     <header className="py-8">

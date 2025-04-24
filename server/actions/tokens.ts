@@ -73,3 +73,45 @@ export const getPasswordResetTokenByToken = async (token: string) => {
         return null;
     }
 }
+
+export const getPasswordResetTokenByEmail =  async (email: string) => {
+  try{
+    const passwordResetToken = await db.query.passwordResetTokens.findFirst({
+        where: eq(passwordResetTokens.email, email),
+    })
+
+    return passwordResetToken;
+
+}catch(error){
+    return null;
+}
+}
+
+export const generatePasswordResetToken = async (email: string) => {
+  try {
+    const token = crypto.randomUUID();
+    const expires = new Date(Date.now() + 3600 * 1000); // 1 hour
+
+    // Remove old token if it exists
+    const existingToken = await getPasswordResetTokenByEmail(email);
+    if (existingToken) {
+      await db
+        .delete(passwordResetTokens)
+        .where(eq(passwordResetTokens.id, existingToken.id));
+    }
+
+    const [newToken] = await db
+      .insert(passwordResetTokens)
+      .values({
+        email,
+        token,
+        expires,
+      })
+      .returning();
+
+    return newToken ?? null;
+  } catch (error) {
+    console.error("Error generating password reset token:", error);
+    return null;
+  }
+}

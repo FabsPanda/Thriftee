@@ -76,6 +76,7 @@ export const LoginForm = () => {
 
   async function onSubmit(values: z.infer<typeof LoginSchema>) {
     const { email, password } = values;
+    console.log(email + password);
     
     // Set status to executing before making the request
     setStatus("executing");
