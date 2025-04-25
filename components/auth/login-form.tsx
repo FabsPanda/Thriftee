@@ -38,11 +38,20 @@ export const LoginForm = () => {
 
 
   const { execute, status } = useAction(emailSignIn, {
-    onSuccess(data){
-      console.log(data)
-    }
+    onSuccess(data) {
+      console.log("RESULT:", data.data);
+      if (data.data?.error) {
+        setError(data.data.error);
+        setSuccess("");
+      } else if (data.data?.success) {
+        setSuccess(data.data.success);
+        setError("");
+      }
+    },
+    onError(err) {
+      setError("Login failed. Please try again.");
+    },
   });
-
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     execute(values);
   };

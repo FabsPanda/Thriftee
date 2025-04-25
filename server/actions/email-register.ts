@@ -8,6 +8,7 @@ import { eq } from "drizzle-orm";
 import { generateEmailVerificationToken } from "./tokens";
 import { user } from "../schema";
 import { sendVerificationEmail } from "./emails";
+import { signUp } from "@/lib/auth-client";
 
 export const emailRegister = actionClient
   .schema(RegisterSchema)
@@ -24,12 +25,12 @@ export const emailRegister = actionClient
     if (existingUser) {
       if (!existingUser.emailVerified) {
         const verificationToken = await generateEmailVerificationToken(email);
-       
+
         await sendVerificationEmail(
           verificationToken[0].email,
-          verificationToken[0].token,
+          verificationToken[0].token
         );
-        
+
         return { success: "Email Confirmation resent" };
       }
       return { error: "Email already in use" };
@@ -37,17 +38,21 @@ export const emailRegister = actionClient
     //return { success: "done" };
 
     //logic buat user yang gak registered
-
-    await db.insert(user).values({
+    const { error } = await signUp.email({
       email,
       name,
+      password,
     });
+
+    if (error) {
+      return { error: error.message || "Registration failed at auth layer" };
+    }
 
     const verificationToken = await generateEmailVerificationToken(email);
 
     await sendVerificationEmail(
       verificationToken[0].email,
-      verificationToken[0].token,
+      verificationToken[0].token
     );
 
     return { success: "Confirmation Email Sent!" };
