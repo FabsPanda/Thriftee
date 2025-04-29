@@ -14,7 +14,15 @@ export const ProductSchema = z.object({
         })
         .positive({
             message: "Price must be a positive number"
+        }),
+        upc: z
+        .string()
+        .length(12, {
+          message: "UPC must be exactly 12 characters",
         })
+        .regex(/^\d{12}$/, {
+          message: "UPC must contain exactly 12 digits",
+        }),
 });
 
 export type zProductSchema = z.infer<typeof ProductSchema>

@@ -27,6 +27,7 @@ import Tiptap from "./tiptap";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "next-safe-action/hooks";
 import { createProduct } from "@/server/actions/create-product";
+import { useRouter } from "next/navigation";
 
 export default function ProductForm(){
     const form = useForm<zProductSchema>({
@@ -36,12 +37,16 @@ export default function ProductForm(){
             description: "",
             price: 0
         },
+        mode: "onChange"
     });
+
+    const router = useRouter();
 
     const {execute, status} = useAction(createProduct, {
         onSuccess: (data) => {
             if(data?.data?.success){
-                console.log(data?.data?.success)
+                router.push("/dashboard/products");
+                // console.log(data?.data?.success)
             }
         },
         onError: (error) => console.error(error)

@@ -118,6 +118,7 @@ export const products = pgTable(
         description: text('description').notNull(),
         title: text('title').notNull(),
         createdAt: timestamp("createdAt").defaultNow(),
-        price: real("price").notNull()
+        price: real("price").notNull(),
+        verified: boolean("verified")
     }
 )
