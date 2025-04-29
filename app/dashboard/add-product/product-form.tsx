@@ -43,8 +43,6 @@ export default function ProductForm(){
 
     const router = useRouter();
 
-  const router = useRouter();
-
   const { execute, status } = useAction(createProduct, {
     onSuccess: (data) => {
       if (data.data?.error) {
