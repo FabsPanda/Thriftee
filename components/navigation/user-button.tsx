@@ -94,7 +94,7 @@ export const UserButton = ({ user }: any) => {
 
   return (
     <div>
-      {!user || !user.emailVerified ? (
+      {!user ? (
         <Button asChild>
           <Link className="flex-gap-2" href="/auth/login">
             <LogIn size={16}/>

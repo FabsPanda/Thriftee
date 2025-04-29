@@ -10,6 +10,7 @@ const actionClient = createSafeActionClient();
 
 export const createProduct = actionClient.schema(ProductSchema).action(async ({parsedInput}) => {
     try {
+        
         if(parsedInput.id){
             const currentProduct = await db.query.products.findFirst({
                 where: eq(products.id, parsedInput.id)
@@ -35,6 +36,6 @@ export const createProduct = actionClient.schema(ProductSchema).action(async ({p
             return { success: `Product ${newProduct[0].title} has been created` }
         }
     } catch (err) {
-        return { error: JSON.stringify(err) }
+        return { error: 'Failed to create a product' }
     }
 })

@@ -98,25 +98,31 @@ export const LoginForm = () => {
       }
 
       // On success, but email is not verified
-      console.log(data?.user.emailVerified);
-      if (!data?.user.emailVerified) {
-        const verificationToken = await generateEmailVerificationToken(email);
-        await sendVerificationEmail(
-          verificationToken[0].email!,
-          verificationToken[0].token!
-        );
-        return { success: "Confirmation Email Sent" };
-      } else {
-          // On success, set success message, reset form and change status to 'success'
-          setSuccess("Login successful!");
-          form.reset();
-          setStatus("success");
+      // console.log(data?.user.emailVerified);
+      // if (!data?.user.emailVerified) {
+      //   const verificationToken = await generateEmailVerificationToken(email);
+      //   await sendVerificationEmail(
+      //     verificationToken[0].email!,
+      //     verificationToken[0].token!
+      //   );
+      //   return { success: "Confirmation Email Sent" };
+      // } else {
+      //     // On success, set success message, reset form and change status to 'success'
+      //     setSuccess("Login successful!");
+      //     form.reset();
+      //     setStatus("success");
 
-          // Redirect to home after successful login
-          router.push("/");
-          router.refresh();
-      }
+      //     // Redirect to home after successful login
+      //     router.push("/");
+      //     router.refresh();
+      // }
 
+      setSuccess("Login successful!");
+      form.reset();
+      setStatus("success");
+
+      router.push("/");
+      router.refresh();
     } catch (err: any) {
       // In case of unexpected errors, handle with a generic message
       setError(err?.message || "Something went wrong");
