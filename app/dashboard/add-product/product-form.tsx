@@ -30,16 +30,18 @@ import { createProduct } from "@/server/actions/create-product";
 import { useRouter } from "next/navigation";
 import {toast} from 'sonner'
 
-export default function ProductForm() {
-  const form = useForm<zProductSchema>({
-    resolver: zodResolver(ProductSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      price: 0,
-    },
-    mode: "onChange",
-  });
+export default function ProductForm(){
+    const form = useForm<zProductSchema>({
+        resolver: zodResolver(ProductSchema),
+        defaultValues:{
+            title: "",
+            description: "",
+            price: 0
+        },
+        mode: "onChange"
+    });
+
+    const router = useRouter();
 
   const router = useRouter();
 

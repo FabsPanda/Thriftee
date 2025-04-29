@@ -5,12 +5,13 @@ import { createSafeActionClient } from "next-safe-action"
 import { db } from "..";
 import { eq } from "drizzle-orm";
 import { products } from "../schema";
+import { verifyProduct } from "@/lib/verify-product";
 
 const actionClient = createSafeActionClient();
 
 export const createProduct = actionClient.schema(ProductSchema).action(async ({parsedInput}) => {
     try {
-        
+        // For edit product
         if(parsedInput.id){
             const currentProduct = await db.query.products.findFirst({
                 where: eq(products.id, parsedInput.id)
@@ -28,6 +29,15 @@ export const createProduct = actionClient.schema(ProductSchema).action(async ({p
             return { success: `Product ${editedProduct[0].title} has been created` }
         }
 
+        const upc = parsedInput.upc;
+        const verification = await verifyProduct(upc);
+        if(verification.error) {
+            return { error: `Verification failed: ${verification.error}` };
+        }
+        
+        const verifiedData = verification.data;
+
+        // For new product
         if(!parsedInput.id){
             const newProduct = await db
                 .insert(products)
