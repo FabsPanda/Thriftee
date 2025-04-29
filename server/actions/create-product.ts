@@ -11,6 +11,21 @@ const actionClient = createSafeActionClient();
 
 export const createProduct = actionClient.schema(ProductSchema).action(async ({parsedInput}) => {
     try {
+
+        // Product Verif
+        let verified = false;
+        const upc = parsedInput.upc;
+        const verification = await verifyProduct(upc);
+        // if(verification.error) {
+        //     return { error: `Verification failed: ${verification.error}` };
+        // }
+
+        if(!verification.error) {
+            verified = true;
+        }
+
+        // const verifiedData = verification.data;
+
         // For edit product
         if(parsedInput.id){
             const currentProduct = await db.query.products.findFirst({
@@ -24,24 +39,22 @@ export const createProduct = actionClient.schema(ProductSchema).action(async ({p
             
             const editedProduct = await db
                 .update(products)
-                .set(parsedInput)
+                .set({
+                    ...parsedInput,
+                    verified
+                })
                 .where(eq(products.id, parsedInput.id)).returning()
-            return { success: `Product ${editedProduct[0].title} has been created` }
+            return { success: `Product ${editedProduct[0].title} has been updated` }
         }
-
-        const upc = parsedInput.upc;
-        const verification = await verifyProduct(upc);
-        if(verification.error) {
-            return { error: `Verification failed: ${verification.error}` };
-        }
-        
-        const verifiedData = verification.data;
 
         // For new product
         if(!parsedInput.id){
             const newProduct = await db
                 .insert(products)
-                .values(parsedInput)
+                .values({
+                    ...parsedInput,
+                    verified
+                })
                 .returning();
             return { success: `Product ${newProduct[0].title} has been created` }
         }
