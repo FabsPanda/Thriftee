@@ -36,7 +36,8 @@ export default function ProductForm(){
         defaultValues:{
             title: "",
             description: "",
-            price: 0
+            price: 0,
+            upc: "",
         },
         mode: "onChange"
     });
@@ -115,6 +116,22 @@ export default function ProductForm(){
                         min={0}
                       />
                     </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="upc"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Product Code (UPC)</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter UPC code e.g. 196154981606"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
