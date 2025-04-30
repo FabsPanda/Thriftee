@@ -6,6 +6,7 @@ import { db } from "..";
 import { eq } from "drizzle-orm";
 import { products } from "../schema";
 import { verifyProduct } from "@/lib/verify-product";
+import { revalidatePath } from "next/cache";
 
 const actionClient = createSafeActionClient();
 
@@ -44,6 +45,8 @@ export const createProduct = actionClient.schema(ProductSchema).action(async ({p
                     verified
                 })
                 .where(eq(products.id, parsedInput.id)).returning()
+            
+            revalidatePath("/dashboard/products")
             return { success: `Product ${editedProduct[0].title} has been updated` }
         }
 
