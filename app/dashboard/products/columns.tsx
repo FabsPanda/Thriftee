@@ -26,21 +26,6 @@ type ProductColumn = {
     id: number
 }
 
-async function deleteProductWrapper(id: number){
-    const data = await deleteProduct({id})
-
-    if(!data){
-        return new Error("No data found")
-    }
-
-    if(data.data?.success){
-        toast.success(data.data?.success)
-    }
-    if(data.data?.error){
-        toast.error(data.data?.error)
-    }
-}
-
 const ActionCell = ({row}: {row: Row<ProductColumn>}) => {
     const {execute, status} = useAction(deleteProduct, {
         onSuccess: (data) => {

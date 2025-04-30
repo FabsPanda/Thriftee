@@ -20,9 +20,9 @@ export default async function Nav() {
   return (
     <header className="py-8">
       <nav>
-        <ul className="flex justify-between">
+        <ul className="flex justify-between items-center">
           <li>
-            <Link href={"/"}><Logo/></Link>
+            <Link href={"/"} aria-label="Thriftee Logo"><Logo/></Link>
           </li>
           <li>
             <UserButton user={session?.user} />

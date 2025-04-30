@@ -35,9 +35,11 @@ export default function RootLayout({
         className={cn("px-6 md:px-12 max-w-7xl mx-auto", `${inter.className}`)}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Nav />
-          <Toaster />
-          {children}
+          <div className="flex-grow px-6 md:px-12 mx-auto max-w-8xl">
+            <Nav />
+            <Toaster />
+            {children}
+          </div>
         </ThemeProvider>
       </body>
     </html>

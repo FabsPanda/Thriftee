@@ -1,6 +1,6 @@
 'use server';
 
-import { createSafeActionClient } from "next-safe-action";
+import { actionClient } from "@/lib/safe-action";
 import { db } from "..";
 import { eq } from "drizzle-orm";
 import { user } from "../schema";
@@ -9,7 +9,7 @@ import { generatePasswordResetToken } from "./tokens";
 import { sendPasswordResetEmail } from "./emails";
 import { authClient } from "@/lib/auth-client";
 
-const actionClient = createSafeActionClient();
+// const actionClient = createSafeActionClient();
 
 export const reset = actionClient.schema(ResetSchema).action(async ({ parsedInput }) => {
     // const { email } = parsedInput;
