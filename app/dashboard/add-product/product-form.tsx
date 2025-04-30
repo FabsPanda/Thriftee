@@ -46,13 +46,15 @@ export default function ProductForm(){
 
   const { execute, status } = useAction(createProduct, {
     onSuccess: (data) => {
-      if (data.data?.error) {
-          toast.error(data.data?.error);
+        toast.dismiss()
+
+        if (data.data?.error) {
+            toast.error(data.data?.error);
+            }
+        if (data.data?.success) {
+            router.push("/dashboard/products");
+            toast.success(data.data?.success)
         }
-      if (data.data?.success) {
-        router.push("/dashboard/products");
-        toast.success(data.data?.success)
-      }
       
     },
     onExecute: () =>{
