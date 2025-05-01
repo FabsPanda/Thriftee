@@ -12,17 +12,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Image from "next/image"
-import { MoreHorizontal } from "lucide-react"
+import { MoreHorizontal, PlusCircle } from "lucide-react"
 import { deleteProduct } from "@/server/actions/delete-product"
 import { toast } from "sonner"
 import { useAction } from "next-safe-action/hooks"
 import Link from "next/link"
+import { TagsWithProducts } from "@/lib/infer-type"
+import { Badge } from "@/components/ui/badge"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import ProductTag from "./product-tag"
 
 type ProductColumn = {
     title: string,
     price: number,
     image: string,
-    type: any,
+    tags: TagsWithProducts[],
     id: number
 }
 
@@ -74,8 +78,40 @@ export const columns: ColumnDef<ProductColumn>[] = [
         header: "Title",
     },
     {
-        accessorKey: "type",
-        header: "Type",
+        accessorKey: "tags",
+        header: "Tags",
+        cell: ({row}) => {
+            const tags = row.getValue("tags") as TagsWithProducts[]
+            return(
+                <div className="flex gap-1">
+                    {tags ? tags.map((tag) => (
+                        <ProductTag editMode={true} productId={tag.productId}>
+                            <Badge key={tag.tagId} variant="default">
+                                {tag.tag?.name}
+                            </Badge>
+                        </ProductTag>
+                    ))
+                    :   
+                    <Badge variant="outline">
+                        None
+                    </Badge>}
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <ProductTag editMode={false} productId={row.original.id}>
+                                    <span className="text-primary">
+                                        <PlusCircle className="h-4 w-4" />
+                                    </span>
+                                </ProductTag>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Create a new tag</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                </div>
+            )
+        }
     },
     {
         accessorKey: "price",

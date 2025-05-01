@@ -5,6 +5,9 @@ import { columns } from "./columns";
 
 export default async function Products(){
     const products = await db.query.products.findMany({
+        with: { 
+            tags: { with: { tag: true } },
+         },
         orderBy: (products, { desc }) => [desc(products.id)]
     })
 
@@ -15,7 +18,7 @@ export default async function Products(){
             id: product.id,
             title: product.title,
             price: product.price,
-            type: [],
+            tags: [],
             image: placeholder.src
         }
     })
