@@ -10,6 +10,7 @@ import {
   real,
 } from "drizzle-orm/pg-core";
 import { createId } from "@paralleldrive/cuid2";
+import { relations } from "drizzle-orm";
 
 export const RoleEnum = pgEnum("roles", ["user", "admin"]);
 
@@ -123,3 +124,49 @@ export const products = pgTable(
         verified: boolean("verified")
     }
 )
+
+export const tags = pgTable(
+    "tags",
+    {
+        id: serial("id").primaryKey(),
+        name: text("name").notNull().unique(),
+    }
+)
+
+export const productTags = pgTable(
+    "productTags",
+    {
+        productId: integer("productId")
+            .notNull()
+            .references(() => products.id, { onDelete: "cascade" }),
+        tagId: integer("tagId")
+            .notNull()
+            .references(() => tags.id, { onDelete: "cascade" }),
+    },
+    (vt) => ({
+        pk: primaryKey({ columns: [vt.productId, vt.tagId] }),
+    })
+)
+
+// A product can have many entries in productTags table,
+// each linking to different tags (if a product has many tags)
+export const productRelations = relations(products, ({many}) => ({
+    tags: many(productTags),
+}))
+
+// A tag can have many entries in productTags table,
+// each linking to different products (if a tag has many products)
+export const tagRelations = relations(tags, ({many}) => ({
+    products: many(productTags),
+}))
+
+export const productTagRelations = relations(productTags, ({one}) => ({
+    product: one(products, {
+        fields: [productTags.tagId],
+        references: [products.id],
+    }),
+    tag: one(tags, {
+        fields: [productTags.tagId],
+        references: [tags.id],
+    }),
+}))
