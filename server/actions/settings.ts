@@ -55,6 +55,7 @@ export const settings = actionClient
     .where(eq(user.id, dbUser.id));
 
     const authCtx = await auth.$context
+    // console.log(parsedInput.password + " " + parsedInput.newPassword);
 
     if (parsedInput.password && parsedInput.newPassword) {
       const accountWithPassword = await db.query.account.findFirst({
@@ -65,11 +66,12 @@ export const settings = actionClient
         return { error: "No password found for this user" }
       }
 
+      // checking if user input the correct current password
       const isMatch = await authCtx.password.verify({
         password: parsedInput.password,
         hash: accountWithPassword.password,
       })
-
+      console.log(isMatch);
       if (!isMatch) {
         return { error: "Password does not match" }
       }
@@ -83,14 +85,38 @@ export const settings = actionClient
         return { error: "New password is the same as the old password" }
       }
 
-      const hashedPassword = await authCtx.password.hash(parsedInput.newPassword)
+      const hashedPassword = await authCtx.password.hash(parsedInput.newPassword);
+      console.log(hashedPassword);
 
-      await authClient.changePassword({
-        newPassword: parsedInput.newPassword,
-        currentPassword: parsedInput.password,
-        revokeOtherSessions: true,
-      });
+    //   await authClient.changePassword({
+    //     newPassword: parsedInput.newPassword,
+    //     currentPassword: parsedInput.password,
+    //     revokeOtherSessions: true,
+    //   });
       
+        console.log(parsedInput.password + " " + parsedInput.newPassword);
+        // const { error } = await authClient.changePassword({
+        //     newPassword: parsedInput.newPassword,
+        //     currentPassword: parsedInput.password,
+        //     revokeOtherSessions: true,
+        // });
+        // if(error) {
+        //     console.log(error);
+        //     return { error: "ERRORRRR"}
+        // }
+        try {
+            const passwordUpdate = await db
+              .update(account)
+              .set({ password: hashedPassword })
+              .where(eq(account.userId, dbUser.id))
+    
+            if (!passwordUpdate) {
+              return { error: "Failed to update password" }
+            }
+        } catch (err) {
+            console.error("Password update error:", err)
+            return { error: "Failed to update password" }
+        }
     }
 
     revalidatePath("/dashboard/settings")
