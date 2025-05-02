@@ -112,6 +112,15 @@ export const twoFactorTokens = pgTable(
     })
 )
 
+export const twoFactor = pgTable("twoFactor", {
+  id: text("id").primaryKey(),
+  userId: text("userId")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  secret: text("secret"),
+  backupCodes: text("backupCodes"),
+})
+
 export const products = pgTable(
     "products",
     {

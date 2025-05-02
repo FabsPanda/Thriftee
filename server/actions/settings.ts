@@ -44,18 +44,10 @@ export const settings = actionClient
       parsedInput.isTwoFactorEnabled = undefined
     }
 
-    const updatedUser = await db
-    .update(user)
-    .set({
-      twoFactorEnabled: parsedInput.isTwoFactorEnabled,
-      name: parsedInput.name,
-      email: parsedInput.email,
-      image: parsedInput.image,
-    })
-    .where(eq(user.id, dbUser.id));
 
     const authCtx = await auth.$context
     // console.log(parsedInput.password + " " + parsedInput.newPassword);
+
 
     if (parsedInput.password && parsedInput.newPassword) {
       const accountWithPassword = await db.query.account.findFirst({
@@ -118,6 +110,15 @@ export const settings = actionClient
             return { error: "Failed to update password" }
         }
     }
+
+    const updatedUser = await db
+    .update(user)
+    .set({
+      name: parsedInput.name,
+      email: parsedInput.email,
+      image: parsedInput.image,
+    })
+    .where(eq(user.id, dbUser.id));
 
     revalidatePath("/dashboard/settings")
     return { success: "Settings updated" }

@@ -32,6 +32,7 @@ import { useAction } from "next-safe-action/hooks"
 import { settings } from "@/server/actions/settings"
 import { UploadButton } from "@/app/api/uploadthing/upload"
 // import { Session } from "better-auth"
+import { authClient } from "@/lib/auth-client"
 
 
 export default function SettingsCard({ sessionUser }: any) {
@@ -47,10 +48,9 @@ export default function SettingsCard({ sessionUser }: any) {
       name: sessionUser.name || undefined,
       email: sessionUser.email || undefined,
       image: sessionUser.image || undefined,
-      isTwoFactorEnabled: sessionUser.isTwoFactorEnabled || undefined,
+      isTwoFactorEnabled: sessionUser.twoFactorEnabled || undefined,
     },
   });
-
   const { execute, status } = useAction(settings, {
     onSuccess: (data) => {
       if (data.data?.success) {
@@ -65,7 +65,38 @@ export default function SettingsCard({ sessionUser }: any) {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof SettingsSchema>) => {
+  const onSubmit = async (values: z.infer<typeof SettingsSchema>) => {
+
+    setError(undefined)
+    setSuccess(undefined)
+  
+    // If password is required for 2FA and not present
+    if (
+      values.isTwoFactorEnabled !== sessionUser.isTwoFactorEnabled &&
+      !values.password
+    ) {
+      setError("Password is required to change two-factor authentication.")
+      return
+    }
+  
+    // Handle 2FA toggle first
+    if (values.isTwoFactorEnabled !== sessionUser.isTwoFactorEnabled) {
+      const password = values.password || ""
+  
+      const { error } = values.isTwoFactorEnabled
+        ? await authClient.twoFactor.enable({ password })
+        : await authClient.twoFactor.disable({ password })
+  
+      if (error) {
+        setError(error.message || "Failed to update 2FA setting")
+        return
+      }
+  
+      setSuccess(
+        `Two-factor authentication ${values.isTwoFactorEnabled ? "enabled" : "disabled"}`
+      )
+    }
+
     execute(values);
   }
 
@@ -209,15 +240,12 @@ export default function SettingsCard({ sessionUser }: any) {
                     Enable two factor authentication for your account
                   </FormDescription>
                   <FormControl>
-                    <Switch
-                      disabled={
-                        status === "executing" ||
-                        sessionUser.isOAuth === true
-                      }
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
+                  <Switch
+                    disabled={status === "executing" || sessionUser.isOAuth}
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
                     />
-                  </FormControl>
+                     </FormControl>
 
                   <FormMessage />
                 </FormItem>

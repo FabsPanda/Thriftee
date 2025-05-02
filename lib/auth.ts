@@ -2,7 +2,8 @@ import {db} from '@/server'
 import { sendEmail, sendPasswordResetEmail } from '@/server/actions/emails';
 import {betterAuth, BetterAuthOptions} from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
-import { text } from 'stream/consumers';
+// import { text } from 'stream/consumers';
+import { twoFactor } from 'better-auth/plugins'
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -11,6 +12,34 @@ export const auth = betterAuth({
   session: {
 
   },
+  plugins:[
+    twoFactor({
+      otpOptions: {
+        async sendOTP({ user, otp }, request) {
+          // send otp to user
+          if(!user.email) {
+            throw new Error("User does not have a valid email address");
+          }
+          const subject = "Thriftee - Your OTP Code";
+          const body = `Hi ${user.name || "user"},\n\nYour login code is: ${otp}\n\nThis code will expire in 10 minutes.\n\nIf you didn’t request this, you can ignore this email.`;
+          const htmlBody = `
+          <p>Hi ${user.name || "user"},</p>
+          <p>Your login code is: <strong>${otp}</strong></p>
+          <p>This code will expire in 10 minutes.</p>
+          <p>If you didn’t request this, you can ignore this email.</p>
+        `;
+          await sendEmail({
+            to: user.email,
+            subject: subject,
+            text: body,
+            html: htmlBody,
+          });
+
+        },
+      },
+      skipVerificationOnEnable: true
+    })
+  ],
   socialProviders: {
     github: {
       clientId: process.env.GITHUB_CLIENT_ID! as string,
