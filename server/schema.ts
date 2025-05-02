@@ -157,25 +157,21 @@ export const productTags = pgTable(
     })
 )
 
-// A product can have many entries in productTags table,
-// each linking to different tags (if a product has many tags)
-export const productRelations = relations(products, ({many}) => ({
-    tags: many(productTags),
-}))
+export const productRelations = relations(products, ({ many }) => ({
+  tags: many(productTags),
+}));
 
-// A tag can have many entries in productTags table,
-// each linking to different products (if a tag has many products)
-export const tagRelations = relations(tags, ({many}) => ({
-    products: many(productTags),
-}))
+export const tagRelations = relations(tags, ({ many }) => ({
+  products: many(productTags),
+}));
 
-export const productTagRelations = relations(productTags, ({one}) => ({
-    product: one(products, {
-        fields: [productTags.tagId],
-        references: [products.id],
-    }),
-    tag: one(tags, {
-        fields: [productTags.tagId],
-        references: [tags.id],
-    }),
-}))
+export const productTagRelations = relations(productTags, ({ one }) => ({
+  product: one(products, {
+    fields: [productTags.productId], 
+    references: [products.id],
+  }),
+  tag: one(tags, {
+    fields: [productTags.tagId], 
+    references: [tags.id],
+  }),
+}));

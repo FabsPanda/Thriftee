@@ -42,18 +42,21 @@ import {
 import { Input } from "@/components/ui/input"
 import { getAllTags } from "@/server/actions/get-all-tags"
 import { toast } from "sonner"
+import { addProductTag } from "@/server/actions/add-product-tag"
   
 export default function ProductTag(
     {
         editMode,
         productId,
         children,
-        tagName
+        tagName,
+        onSuccess
     }: {
         editMode: boolean,
         productId?: number,
         children: React.ReactNode,
-        tagName: string
+        tagName: string,
+        onSuccess?: () => void
     }
 ){
     const form = useForm<z.infer<typeof TagSchema>>({
@@ -71,8 +74,9 @@ export default function ProductTag(
         return allTags;
       };
 
-    const [open, setOpen] = useState(false)
-    const [value, setValue] = useState(tagName)
+    const [open, setOpen] = useState(false);
+    const [popoverOpen, setPopoverOpen] = useState(false);
+    const [value, setValue] = useState(tagName);
     const [tags, setTags] = useState<{ id: number; name: string }[]>([]);
 
     const tagsList = tags.map((tag: { id: number; name: string}) => ({
@@ -81,6 +85,7 @@ export default function ProductTag(
     }))
 
     useEffect(() => {
+
         const loadTags = async () => {
           const data = await fetchTags();
           if (data.success) {
@@ -93,12 +98,27 @@ export default function ProductTag(
         loadTags();
       }, []);
 
-    const onSubmit = (values: z.infer<typeof TagSchema>) => {
-        console.log(values.productId)
+    const onSubmit = async (values: z.infer<typeof TagSchema>) => {
+        console.log(values.productId);
+
+        const response = await addProductTag({
+            productId: values.productId,
+            tagId: values.tagId,
+        });
+
+        if (response.error) {
+            toast.error(response.error);
+        } else {
+            toast.success(`${editMode ? "Updated" : "Added"} tag: ${values.tagName}`);
+            onSuccess?.();
+            setOpen(false);
+        }
+        
+        
     }
 
     return(
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen} >
             <DialogTrigger>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
@@ -116,12 +136,12 @@ export default function ProductTag(
                             <FormItem>
                             <FormLabel>Tag Name</FormLabel>
                             <FormControl>
-                                <Popover open={open} onOpenChange={setOpen}>
+                                <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
                                     <PopoverTrigger asChild>
                                         <Button
                                         variant="outline"
                                         role="combobox"
-                                        aria-expanded={open}
+                                        aria-expanded={popoverOpen}
                                         className="w-[200px] justify-between"
                                         >
                                         {value
@@ -144,7 +164,7 @@ export default function ProductTag(
                                                     setValue(currentValue === value ? "" : currentValue)
                                                     form.setValue("tagId", parseInt(tag.value))
                                                     form.setValue("tagName", tag.label)
-                                                    setOpen(false)
+                                                    setPopoverOpen(false)
                                                 }}
                                                 >
                                                 <Check
@@ -171,7 +191,7 @@ export default function ProductTag(
                                 Delete Tag
                             </Button>
                         )}
-                        <Button type="submit">
+                        <Button className="ml-3" type="submit">
                             {editMode ? "Update Tag" : "Insert Tag"}
                         </Button>
                     </form>

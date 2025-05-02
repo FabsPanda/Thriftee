@@ -1,33 +1,57 @@
-import { db } from "@/server"
-import placeholder from '@/public/placeholder_small.png';
+import { db } from "@/server";
+import placeholder from "@/public/placeholder_small.png";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { user } from "@/server/schema";
+import { eq } from "drizzle-orm";
 
-export default async function Products(){
+export default async function Products() {
+    
+    const session = await auth.api.getSession({
+        headers: await headers()
+    });
+
+    let userRole = 'user';
+    
+    if(session?.user.email){
+        const existingUser = await db.query.user.findFirst({
+            where: eq(user.email, session?.user.email),
+        });
+
+        userRole = existingUser?.role ?? 'user';
+    }
+
+    if (userRole !== "admin") return redirect('/dashboard/settings');
+    
     const products = await db.query.products.findMany({
         with: { 
-            tags: { with: { tag: true } },
-         },
-        orderBy: (products, { desc }) => [desc(products.id)]
-    })
+        tags: { with: { tag: true } },
+        },
+        orderBy: (products, { asc }) => [asc(products.id)],
+    });
 
-    if(!products) throw new Error("No products found")
+    if (!products.length) {
+        throw new Error("No products found");
+    }
 
-    const dataTable = products.map((product) => {
-        return{
-            id: product.id,
-            title: product.title,
-            price: product.price,
-            tags: [],
-            image: placeholder.src
-        }
-    })
+    const dataTable = products.map((product) => ({
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        tags: product.tags.map((tag) => ({
+        productId: product.id,
+        tagId: tag.tag.id,
+        tag: { id: tag.tag.id, name: tag.tag.name },
+        })),
+        image: placeholder.src,
+    }));
 
-    if(!dataTable) throw new Error("No data found")
-
-    return(
-       <div>
-            <DataTable columns={columns} data={dataTable} />
-       </div> 
-    )
+    return (
+        <div>
+        <DataTable columns={columns} data={dataTable} />
+        </div>
+    );
 }

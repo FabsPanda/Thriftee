@@ -21,6 +21,8 @@ import { TagsWithProducts } from "@/lib/infer-type"
 import { Badge } from "@/components/ui/badge"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import ProductTag from "./product-tag"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 type ProductColumn = {
     title: string,
@@ -81,24 +83,49 @@ export const columns: ColumnDef<ProductColumn>[] = [
         accessorKey: "tags",
         header: "Tags",
         cell: ({row}) => {
-            const tags = row.getValue("tags") as TagsWithProducts[]
+            
+            const tags = row.getValue("tags") as TagsWithProducts[];
+           
+            const router = useRouter();
+            const handleTagUpdate = () => {
+                router.refresh(); // Trigger re-render
+              };
             return(
                 <div className="flex gap-1">
-                    {tags ? tags.map((tag) => (
-                        <ProductTag editMode={true} productId={tag.productId} tagName={tag.tag.name}>
-                            <Badge key={tag.tagId} variant="default">
-                                {tag.tag.name}
+                    {
+                        tags && tags.length > 0 ? (
+                            <ProductTag
+                            editMode={true}
+                            productId={tags[0].productId}
+                            tagName={tags[0].tag.name}
+                            onSuccess={handleTagUpdate}
+                            >
+                            <Badge variant="default">
+                                {tags[0].tag.name}
                             </Badge>
-                        </ProductTag>
-                    ))
-                    :   
-                    <Badge variant="outline">
-                        None
-                    </Badge>}
-                    <TooltipProvider>
+                            </ProductTag>
+                        ) : (
+                            // <Badge variant="outline">None</Badge>
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <ProductTag editMode={false} productId={row.original.id} tagName="" onSuccess={handleTagUpdate}>
+                                            <span className="text-primary">
+                                                <PlusCircle className="h-4 w-4" />
+                                            </span>
+                                        </ProductTag>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Create a new tag</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                         </TooltipProvider>
+                        )
+                    }
+                    {/* <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <ProductTag editMode={false} productId={row.original.id} tagName="">
+                                <ProductTag editMode={false} productId={row.original.id} tagName="" onSuccess={handleTagUpdate}>
                                     <span className="text-primary">
                                         <PlusCircle className="h-4 w-4" />
                                     </span>
@@ -108,7 +135,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
                                 <p>Create a new tag</p>
                             </TooltipContent>
                         </Tooltip>
-                    </TooltipProvider>
+                    </TooltipProvider> */}
                 </div>
             )
         }
