@@ -1,7 +1,7 @@
 "use client"
 
 import { TagsWithProducts } from "@/lib/infer-type"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import {
     Dialog,
     DialogContent,
@@ -10,29 +10,172 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import { Check, ChevronsUpDown } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { useForm } from "react-hook-form"
+import * as z from 'zod'
+import { zodResolver } from "@hookform/resolvers/zod"
+import { TagSchema } from "@/types/tag-schema"
+import { Button } from "@/components/ui/button"
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+} from "@/components/ui/command"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { getAllTags } from "@/server/actions/get-all-tags"
+import { toast } from "sonner"
   
 export default function ProductTag(
     {
         editMode,
         productId,
-        children
+        children,
+        tagName
     }: {
         editMode: boolean,
-        productId: number,
-        children: React.ReactNode
+        productId?: number,
+        children: React.ReactNode,
+        tagName: string
     }
 ){
+    const form = useForm<z.infer<typeof TagSchema>>({
+        resolver: zodResolver(TagSchema),
+        defaultValues:{
+            editMode,
+            tagId: undefined,
+            productId,
+            tagName
+        },
+    });
+
+    const fetchTags = async () => {
+        const allTags = await getAllTags();
+        return allTags;
+      };
+
+    const [open, setOpen] = useState(false)
+    const [value, setValue] = useState(tagName)
+    const [tags, setTags] = useState<{ id: number; name: string }[]>([]);
+
+    const tagsList = tags.map((tag: { id: number; name: string}) => ({
+        value: tag.id.toString(),
+        label: tag.name
+    }))
+
+    useEffect(() => {
+        const loadTags = async () => {
+          const data = await fetchTags();
+          if (data.success) {
+            setTags(data.success);
+          } else {
+            console.error("Failed to fetch tags:", data.error);
+          }
+        };
+      
+        loadTags();
+      }, []);
+
+    const onSubmit = (values: z.infer<typeof TagSchema>) => {
+        console.log(values.productId)
+    }
+
     return(
         <Dialog>
             <DialogTrigger>{children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                <DialogTitle>Are you absolutely sure?</DialogTitle>
+                <DialogTitle>{editMode ? "Edit" : "Create"} your tags</DialogTitle>
                 <DialogDescription>
-                    This action cannot be undone. This will permanently delete your account
-                    and remove your data from our servers.
+                    Manage your product tags
                 </DialogDescription>
                 </DialogHeader>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <FormField
+                        control={form.control}
+                        name="tagName"
+                        render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>Tag Name</FormLabel>
+                            <FormControl>
+                                <Popover open={open} onOpenChange={setOpen}>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                        variant="outline"
+                                        role="combobox"
+                                        aria-expanded={open}
+                                        className="w-[200px] justify-between"
+                                        >
+                                        {value
+                                            ? tagsList.find((tag) => tag.label === value)?.label
+                                            : "Select tags..."}
+                                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-[200px] p-0">
+                                        <Command>
+                                        <CommandInput placeholder="Search tags..." />
+                                        <CommandList>
+                                            <CommandEmpty>No tags found.</CommandEmpty>
+                                            <CommandGroup>
+                                            {tagsList && tagsList.map((tag) => (
+                                                <CommandItem
+                                                key={tag.value}
+                                                value={tag.label}
+                                                onSelect={(currentValue) => {
+                                                    setValue(currentValue === value ? "" : currentValue)
+                                                    form.setValue("tagId", parseInt(tag.value))
+                                                    form.setValue("tagName", tag.label)
+                                                    setOpen(false)
+                                                }}
+                                                >
+                                                <Check
+                                                    className={cn(
+                                                    "mr-2 h-4 w-4",
+                                                    value === tag.label ? "opacity-100" : "opacity-0"
+                                                    )}
+                                                />
+                                                {tag.label}
+                                                </CommandItem>
+                                            ))}
+                                            </CommandGroup>
+                                        </CommandList>
+                                        </Command>
+                                    </PopoverContent>
+                                </Popover>
+                            </FormControl>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+                        {editMode && tagName && (
+                            <Button type="button" onClick={(e) => e.preventDefault()}>
+                                Delete Tag
+                            </Button>
+                        )}
+                        <Button type="submit">
+                            {editMode ? "Update Tag" : "Insert Tag"}
+                        </Button>
+                    </form>
+                </Form>
             </DialogContent>
         </Dialog>
     )

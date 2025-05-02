@@ -85,9 +85,9 @@ export const columns: ColumnDef<ProductColumn>[] = [
             return(
                 <div className="flex gap-1">
                     {tags ? tags.map((tag) => (
-                        <ProductTag editMode={true} productId={tag.productId}>
+                        <ProductTag editMode={true} productId={tag.productId} tagName={tag.tag.name}>
                             <Badge key={tag.tagId} variant="default">
-                                {tag.tag?.name}
+                                {tag.tag.name}
                             </Badge>
                         </ProductTag>
                     ))
@@ -98,7 +98,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <ProductTag editMode={false} productId={row.original.id}>
+                                <ProductTag editMode={false} productId={row.original.id} tagName="">
                                     <span className="text-primary">
                                         <PlusCircle className="h-4 w-4" />
                                     </span>
