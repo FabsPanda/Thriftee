@@ -10,7 +10,7 @@ import {
   real,
 } from "drizzle-orm/pg-core";
 import { createId } from "@paralleldrive/cuid2";
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 
 export const RoleEnum = pgEnum("roles", ["user", "admin"]);
 
@@ -127,6 +127,7 @@ export const products = pgTable(
         id: serial('id').primaryKey(),
         description: text('description').notNull(),
         title: text('title').notNull(),
+        image: text("image").array(),
         createdAt: timestamp("createdAt").defaultNow(),
         price: real("price").notNull(),
         upc: text('upc'),

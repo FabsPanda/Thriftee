@@ -34,8 +34,15 @@ export default async function Products() {
     });
 
     if (!products.length) {
-        throw new Error("No products found");
-    }
+        return (
+          <div className="text-center py-20">
+            <p className="text-gray-500 text-lg">No products found.</p>
+            <p className="text-sm text-gray-400 mt-2">
+              Start by adding some products to see them here.
+            </p>
+          </div>
+        );
+      }
 
     const dataTable = products.map((product) => ({
         id: product.id,
@@ -46,7 +53,7 @@ export default async function Products() {
         tagId: tag.tag.id,
         tag: { id: tag.tag.id, name: tag.tag.name },
         })),
-        image: placeholder.src,
+        image: product.image ?? [],
     }));
 
     return (

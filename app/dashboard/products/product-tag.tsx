@@ -43,6 +43,7 @@ import { Input } from "@/components/ui/input"
 import { getAllTags } from "@/server/actions/get-all-tags"
 import { toast } from "sonner"
 import { addProductTag } from "@/server/actions/add-product-tag"
+import { deleteProductTag } from "@/server/actions/delete-product-tag"
   
 export default function ProductTag(
     {
@@ -187,7 +188,29 @@ export default function ProductTag(
                         )}
                         />
                         {editMode && tagName && (
-                            <Button type="button" onClick={(e) => e.preventDefault()}>
+                            <Button
+                                variant="destructive"
+                                type="button"
+                                onClick={async () => {
+                                if (!productId || !form.getValues("tagName")) return;
+
+                                const confirmDelete = confirm(`Are you sure you want to remove tag "${tagName}"?`);
+                                if (!confirmDelete) return;
+
+                                const response = await deleteProductTag({
+                                    productId,
+                                    tagName: form.getValues("tagName"),
+                                });
+
+                                if (response.error) {
+                                    toast.error(response.error);
+                                } else {
+                                    toast.success("Tag removed successfully.");
+                                    onSuccess?.();
+                                    setOpen(false);
+                                }
+                                }}
+                            >
                                 Delete Tag
                             </Button>
                         )}

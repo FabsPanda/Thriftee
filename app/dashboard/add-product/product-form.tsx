@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { ProductSchema, zProductSchema } from "@/types/product-schema";
 import {
   Card,
@@ -30,7 +30,8 @@ import { createProduct } from "@/server/actions/create-product";
 import { useRouter, useSearchParams } from "next/navigation";
 import {toast} from 'sonner'
 import { getProduct } from "@/server/actions/get-product";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { UploadDropzone } from "@/app/api/uploadthing/upload";
 
 export default function ProductForm(){
     const form = useForm<zProductSchema>({
@@ -40,13 +41,24 @@ export default function ProductForm(){
             description: "",
             price: 0,
             upc: "",
+            image:[],
         },
         mode: "onChange"
     });
 
+    const { control, setValue, setError, handleSubmit, formState, watch } = form;
+    const [existingImg, setImages] = useState<string[]>([]);
+    const [isImageChanged, setImageChanged] = useState(false);
+    function arraysEqual(a: string[], b: string[]) {
+        if (a.length !== b.length) return false;
+        return a.every((val, idx) => val === b[idx]);
+    }
+      
+
     const router = useRouter();
     const searchParams = useSearchParams();
     const editMode = searchParams.get('id');
+    
 
     const checkProduct = async (id: number) => {
         if(editMode){
@@ -66,6 +78,15 @@ export default function ProductForm(){
                 }
                 form.setValue("id", id)
             }
+            const existingImages =
+            typeof data.success?.image === "string"
+              ? [data.success.image]
+              : Array.isArray(data.success?.image)
+              ? data.success.image
+              : [];
+        
+            form.setValue("image", existingImages);
+            setImages(existingImages);
         }
     }
 
@@ -89,7 +110,7 @@ export default function ProductForm(){
       
     },
     onExecute: () =>{
-        toast.loading('Creating Product')
+        toast.loading(editMode ? 'Updating Product Details' : 'Creating Product')
     },
   });
 
@@ -170,16 +191,84 @@ export default function ProductForm(){
                 </FormItem>
               )}
             />
+                        <FormField
+              control={control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Product Images</FormLabel>
+                  <FormControl>
+                    <UploadDropzone
+                      endpoint="variantUploader"
+                      className="ut-allowed-content:text-secondary-foreground ut-label:text-primary ut-upload-icon:text-primary/50 hover:bg-primary/10 transition-all duration-500 ease-in-out border-secondary ut-button:bg-primary/75 ut-button:ut-readying:bg-secondary"
+                      onUploadError={(error) => {
+                        setError("image", {
+                          type: "manual",
+                          message: error.message,
+                        });
+                      }}
+                      onClientUploadComplete={(files) => {
+                        const urls = files.map((f) => f.url);
+                        field.onChange([...(field.value ?? []), ...urls]);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                  {(field.value?.length ?? 0) > 0 && (
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2">
+                      {(field.value ?? []).map((img, idx) => (
+                        <div key={idx} className="relative">
+                          <img
+                            src={img}
+                            alt={`Product Image ${idx + 1}`}
+                            className="w-full h-32 object-cover rounded"
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-1 right-1"
+                            onClick={() =>{
+                                const updatedImages = (field.value ?? []).filter((_, i) => i !== idx);
+                                field.onChange(updatedImages);
+                                form.setValue("image", updatedImages);
+                            }}
+                          >
+                            ✕
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </FormItem>
+              )}
+            />
+
+
             <Button
-              disabled={
+            disabled={
                 status === "executing" ||
-                !form.formState.isValid ||
-                !form.formState.isDirty
-              }
-              type="submit"
+                
+                (
+                editMode 
+                    ? (
+                        
+                        !form.formState.isDirty && 
+                        arraysEqual(existingImg, form.getValues("image") || []) && !form.formState.isValid
+                    )
+                    : (
+                        
+                        !form.formState.isDirty
+                    )
+                ) || !form.formState.isValid
+            }
+            type="submit"
             >
-              {editMode ? 'Save Changes' : "Create Product"}
+            {editMode ? 'Save Changes' : 'Create Product'}
             </Button>
+
+
+
           </form>
         </Form>
       </CardContent>

@@ -27,7 +27,7 @@ import { useRouter } from "next/navigation"
 type ProductColumn = {
     title: string,
     price: number,
-    image: string,
+    image: string[],
     tags: TagsWithProducts[],
     id: number
 }
@@ -154,17 +154,36 @@ export const columns: ColumnDef<ProductColumn>[] = [
     },
     {
         accessorKey: "image",
-        header: "Image",
-        cell: ({row}) => {
-            const cellImage = row.getValue("image") as string
-            const cellTitle = row.getValue("title") as string
-            return(
-                <div className="">
-                    <Image src={cellImage} alt={cellTitle} width={50} height={50} className="rounded-md" />
-                </div>
-            )
-        }
+        header: "Images",
+        cell: ({ row }) => {
+          const images = row.getValue("image") as string[]; // Ensure 'image' is a string array
+          const cellTitle = row.getValue("title") as string;
+      
+          return (
+            <div className="flex gap-2">
+              {images.length > 0 ? (
+                images.slice(0, 3).map((img, idx) => (
+                  <div key={idx} className="relative">
+                    <Image
+                      src={img}
+                      alt={`${cellTitle} - Image ${idx + 1}`}
+                      width={50}
+                      height={50}
+                      className="rounded-md object-cover"
+                    />
+                  </div>
+                ))
+              ) : (
+                <div>No images</div>
+              )}
+              {images.length > 3 && (
+                <div className="text-xs text-gray-500">+{images.length - 3} more</div>
+              )}
+            </div>
+          );
+        },
     },
+      
     {
         accessorKey: "actions",
         header: "Actions",
