@@ -10,6 +10,7 @@ import { useEffect } from 'react'
 
 
 const Tiptap = ({ val }: { val: string }) => {
+    
     const { setValue } = useFormContext();
 
     const editor = useEditor({
@@ -32,6 +33,7 @@ const Tiptap = ({ val }: { val: string }) => {
                 }
             })
         ],
+        immediatelyRender: false,
         onUpdate: ({ editor }) => {
             const content = editor.getHTML()
             // If you want to sanitize the HTML to prevent malicious scripts,

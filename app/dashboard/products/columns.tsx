@@ -23,6 +23,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import ProductTag from "./product-tag"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import formatPrice from "@/lib/format-price"
 
 type ProductColumn = {
     title: string,
@@ -145,10 +146,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
         header: "Price",
         cell: ({row}) => {
             const price = parseFloat(row.getValue('price'));
-            const formatted = new Intl.NumberFormat('id-ID', {
-                currency: "IDR",
-                style: "currency"
-            }).format(price);
+            const formatted = formatPrice(price);
             return(<div className="font-medium text-xs">{formatted}</div>)
         }
     },

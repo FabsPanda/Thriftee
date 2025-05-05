@@ -7,8 +7,15 @@ import { eq } from "drizzle-orm";
 import { products } from "../schema";
 import { verifyProduct } from "@/lib/verify-product";
 import { revalidatePath } from "next/cache";
+import { algoliasearch } from 'algoliasearch';
 
 const actionClient = createSafeActionClient();
+
+const client = algoliasearch(
+    process.env.NEXT_PUBLIC_ALGOLIA_ID!,
+    process.env.ALGOLIA_ADMIN!
+);
+
 
 export const createProduct = actionClient.schema(ProductSchema).action(async ({parsedInput}) => {
     try {
@@ -44,8 +51,18 @@ export const createProduct = actionClient.schema(ProductSchema).action(async ({p
                     ...parsedInput,
                     verified
                 })
-                .where(eq(products.id, parsedInput.id)).returning()
+                .where(eq(products.id, parsedInput.id)).returning();
             
+            client.partialUpdateObject({
+                indexName: "products",
+                objectID: parsedInput.id.toString(),
+                attributesToUpdate: {
+                    id: parsedInput.id,
+                    title: parsedInput.title,
+                    price: parsedInput.price,
+                    images: parsedInput.image
+                }
+            });
             revalidatePath("/dashboard/products")
             return { success: `Product ${editedProduct[0].title} has been updated` }
         }
@@ -59,6 +76,18 @@ export const createProduct = actionClient.schema(ProductSchema).action(async ({p
                     verified
                 })
                 .returning();
+                // if(newProduct) {
+                //     client.saveObject({
+                //         indexName: "products",
+                //         body: {
+                //             objectId: parsedInput.id?.toString(),
+                //             id: parsedInput.id,
+                //             title: parsedInput.title,
+                //             price: parsedInput.price,
+                //             images: parsedInput.image
+                //         }
+                //     });
+                // }
             return { success: `Product ${newProduct[0].title} has been created` }
         }
     } catch (err) {
