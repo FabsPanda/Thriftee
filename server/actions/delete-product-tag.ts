@@ -12,7 +12,7 @@ export async function deleteProductTag({
   tagName: string;
 }): Promise<{ success?: string; error?: string }> {
   try {
-    // First, get the tag ID based on tag name
+    
     const tag = await db.query.tags.findFirst({
       where: eq(tags.name, tagName),
     });
@@ -21,7 +21,7 @@ export async function deleteProductTag({
       return { error: "Tag not found" };
     }
 
-    // Then delete the productTag entry
+    
     await db
       .delete(productTags)
       .where(
