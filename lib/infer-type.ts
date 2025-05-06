@@ -30,3 +30,10 @@ export type TagsWithProducts = InferResultType<
     "productTags",
     { tag: true }
 >
+
+export type ReviewsWithUser = InferResultType<
+    "reviews",
+    {
+        user: true
+    }
+    >

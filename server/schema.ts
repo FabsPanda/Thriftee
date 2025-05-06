@@ -8,6 +8,7 @@ import {
   primaryKey,
   serial,
   real,
+  index,
 } from "drizzle-orm/pg-core";
 import { createId } from "@paralleldrive/cuid2";
 import { relations, sql } from "drizzle-orm";
@@ -29,6 +30,7 @@ export const user = pgTable("user", {
   updatedAt: timestamp("updatedAt").defaultNow().notNull(),
   twoFactorEnabled: boolean("twoFactorEnabled").default(false),
   role: RoleEnum("roles").default("user"),
+  stripeCustomerId: text("stripeCustomerId"),
 });
 
 export const session = pgTable("session", {
@@ -160,6 +162,7 @@ export const productTags = pgTable(
 
 export const productRelations = relations(products, ({ many }) => ({
   tags: many(productTags),
+  reviews: many(reviews, ({relationName: "reviews"}))
 }));
 
 export const tagRelations = relations(tags, ({ many }) => ({
@@ -176,3 +179,80 @@ export const productTagRelations = relations(productTags, ({ one }) => ({
     references: [tags.id],
   }),
 }));
+
+export const reviews = pgTable("reviews", {
+  id: serial("id").primaryKey(),
+  rating: real("rating").notNull(),
+  userID: text("userID").notNull().references(() => user.id, { onDelete: "cascade" }),
+  productID: serial("productID").notNull().references(() => products.id, { onDelete: "cascade" }),
+  comment: text("comment").notNull(),
+  created: timestamp("created").defaultNow(),
+}, (table) => {
+  return {
+    productIdx: index('productIdx').on(table.productID),
+    userIdx: index('userIdx').on(table.userID)
+  }
+})
+
+export const reviewRelations = relations(reviews, ({ one }) => ({
+  user: one(user, {
+    fields: [reviews.userID],
+    references: [user.id],
+    relationName: "user_reviews",
+  }),
+  product: one(products, {
+    fields: [reviews.productID],
+    references: [products.id],
+    relationName: "reviews",
+  })
+}))
+
+export const userRelations = relations(user, ({ many }) => ({
+  reviews: many(reviews, { relationName: "user_reviews" }),
+  orders: many(orders, { relationName: "user_orders" }),
+}))
+
+export const orders = pgTable("orders", {
+  id: serial("id").primaryKey(),
+  userID: text("userID")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  total: real("total").notNull(),
+  status: text("status").notNull(),
+  created: timestamp("created").defaultNow(),
+  receiptURL: text("receiptURL"),
+  paymentIntentID: text("paymentIntentID"),
+})
+
+export const ordersRelations = relations(orders, ({ one, many }) => ({
+  user: one(user, {
+    fields: [orders.userID],
+    references: [user.id],
+    relationName: "user_orders",
+  }),
+  orderProduct: many(orderProduct, { relationName: "orderProduct" }),
+}))
+
+export const orderProduct = pgTable("orderProduct", {
+  id: serial("id").primaryKey(),
+  quantity: integer("quantity").notNull(),
+  productID: serial("productID")
+    .notNull()
+    .references(() => products.id, { onDelete: "cascade" }),
+  orderID: serial("orderID")
+    .notNull()
+    .references(() => orders.id, { onDelete: "cascade" }),
+})
+
+export const orderProductRelations = relations(orderProduct, ({ one }) => ({
+  order: one(orders, {
+    fields: [orderProduct.orderID],
+    references: [orders.id],
+    relationName: "orderProduct",
+  }),
+  product: one(products, {
+    fields: [orderProduct.productID],
+    references: [products.id],
+    relationName: "products",
+  }),
+}))

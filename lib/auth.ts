@@ -4,6 +4,13 @@ import {betterAuth, BetterAuthOptions} from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 // import { text } from 'stream/consumers';
 import { twoFactor } from 'better-auth/plugins'
+import { stripe } from '@better-auth/stripe';
+import Stripe from 'stripe';
+
+
+const stripeClient = new Stripe(process.env.STRIPE_SECRET!, {
+  apiVersion: "2025-04-30.basil",
+})
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -13,6 +20,14 @@ export const auth = betterAuth({
 
   },
   plugins:[
+    stripe({
+      stripeClient,
+      stripeWebhookSecret: process.env.NEXT_PUBLIC_PUBLISH_KEY!,
+      createCustomerOnSignUp: true,
+      onCustomerCreate: async ({ customer, stripeCustomer, user }, request) => {
+        console.log(`Customer ${customer.id} created for user ${user.id}`);
+      },
+    }),
     twoFactor({
       otpOptions: {
         async sendOTP({ user, otp }, request) {

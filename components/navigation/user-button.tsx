@@ -103,7 +103,6 @@ export const UserButton = ({ user }: any) => {
   // Extract userId from passed data
   const userId = user?.email;
   // console.log(userId);
-  // Handle sign out
 
   const router = useRouter()
   const { setTheme, theme } = useTheme()
