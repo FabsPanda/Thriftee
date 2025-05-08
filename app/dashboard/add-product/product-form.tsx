@@ -191,7 +191,7 @@ export default function ProductForm(){
                 </FormItem>
               )}
             />
-                        <FormField
+            <FormField
               control={control}
               name="image"
               render={({ field }) => (

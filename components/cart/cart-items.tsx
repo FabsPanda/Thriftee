@@ -16,6 +16,7 @@ import dynamic from "next/dynamic";
 const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
 export default function CartItems() {
+    
     const {cart, addToCart, removeFromCart, setCheckoutProgress} = useCartStore();
 
     const totalPrice = useMemo(() => {
@@ -42,7 +43,7 @@ export default function CartItems() {
                 </div>
             )}
             {cart.length > 0 && (
-                <div className="h-88 w-full overflow-y-auto">
+                <div className="max-h-80 w-full overflow-y-auto">
                     <Table className="max-w-2xl mx-auto">
                         <TableHeader>
                             <TableRow>

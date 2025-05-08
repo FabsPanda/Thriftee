@@ -26,9 +26,14 @@ export type InferResultType<
     }
 >
 
+export type ProductWithTag = InferResultType<
+  "products",
+  { tag: { with: { tag: true } } }
+>
+
 export type TagsWithProducts = InferResultType<
-    "productTags",
-    { tag: true }
+  "productTags",
+  { tag: true; product: true }
 >
 
 export type ReviewsWithUser = InferResultType<
@@ -36,4 +41,12 @@ export type ReviewsWithUser = InferResultType<
     {
         user: true
     }
-    >
+>
+
+export type TotalOrders = InferResultType<
+    "orderProduct",
+    {
+        order: { with: { user: true } }
+        product: true,
+    }
+>

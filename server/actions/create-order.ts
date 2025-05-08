@@ -10,7 +10,7 @@ import { db } from "..";
 
 const action = createSafeActionClient();
 
-export const createOrder = action.schema(createOrderSchema).action(async ({ parsedInput: { products, status, total } }) => {
+export const createOrder = action.schema(createOrderSchema).action(async ({ parsedInput: { products, status, total, paymentIntentID } }) => {
     const session = await auth.api.getSession({
         headers: await headers()
       });
@@ -20,6 +20,7 @@ export const createOrder = action.schema(createOrderSchema).action(async ({ pars
 
     const order = await db.insert(orders).values({
         status,
+        paymentIntentID,
         total,
         userID: session.user.id
     })

@@ -29,7 +29,12 @@ type ProductColumn = {
     title: string,
     price: number,
     image: string[],
-    tags: TagsWithProducts[],
+    tags: {productId: number;
+        tagId: number;
+        tag: {
+            id: number;
+            name: string;
+        }},
     id: number
 }
 
@@ -85,8 +90,8 @@ export const columns: ColumnDef<ProductColumn>[] = [
         header: "Tags",
         cell: ({row}) => {
             
-            const tags = row.getValue("tags") as TagsWithProducts[];
-           
+            const tags = row.getValue("tags") as { tag: { id: number; name: string }; productId: number };
+        //    console.log(tags);
             const router = useRouter();
             const handleTagUpdate = () => {
                 router.refresh(); // Trigger re-render
@@ -94,15 +99,15 @@ export const columns: ColumnDef<ProductColumn>[] = [
             return(
                 <div className="flex gap-1">
                     {
-                        tags && tags.length > 0 ? (
+                        tags ? (
                             <ProductTag
                             editMode={true}
-                            productId={tags[0].productId}
-                            tagName={tags[0].tag.name}
+                            productId={tags.productId}
+                            tagName={tags.tag.name}
                             onSuccess={handleTagUpdate}
                             >
                             <Badge variant="default">
-                                {tags[0].tag.name}
+                                {tags.tag.name}
                             </Badge>
                             </ProductTag>
                         ) : (

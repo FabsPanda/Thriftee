@@ -160,9 +160,12 @@ export const productTags = pgTable(
     })
 )
 
-export const productRelations = relations(products, ({ many }) => ({
-  tags: many(productTags),
-  reviews: many(reviews, ({relationName: "reviews"}))
+export const productRelations = relations(products, ({ one, many }) => ({
+  tag: one(productTags, {
+    fields: [products.id],
+    references: [productTags.productId],
+  }),
+  reviews: many(reviews, { relationName: "reviews" }),
 }));
 
 export const tagRelations = relations(tags, ({ many }) => ({
@@ -171,11 +174,11 @@ export const tagRelations = relations(tags, ({ many }) => ({
 
 export const productTagRelations = relations(productTags, ({ one }) => ({
   product: one(products, {
-    fields: [productTags.productId], 
+    fields: [productTags.productId],
     references: [products.id],
   }),
   tag: one(tags, {
-    fields: [productTags.tagId], 
+    fields: [productTags.tagId],
     references: [tags.id],
   }),
 }));

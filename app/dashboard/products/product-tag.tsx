@@ -19,6 +19,7 @@ import { TagSchema } from "@/types/tag-schema"
 import { Button } from "@/components/ui/button"
 import {
     Command,
+    CommandDialog,
     CommandEmpty,
     CommandGroup,
     CommandInput,
@@ -152,34 +153,34 @@ export default function ProductTag(
                                         </Button>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-[200px] p-0">
-                                        <Command>
-                                        <CommandInput placeholder="Search tags..." />
-                                        <CommandList>
-                                            <CommandEmpty>No tags found.</CommandEmpty>
-                                            <CommandGroup>
-                                            {tagsList && tagsList.map((tag) => (
-                                                <CommandItem
-                                                key={tag.value}
-                                                value={tag.label}
-                                                onSelect={(currentValue) => {
-                                                    setValue(currentValue === value ? "" : currentValue)
-                                                    form.setValue("tagId", parseInt(tag.value))
-                                                    form.setValue("tagName", tag.label)
-                                                    setPopoverOpen(false)
-                                                }}
-                                                >
-                                                <Check
-                                                    className={cn(
-                                                    "mr-2 h-4 w-4",
-                                                    value === tag.label ? "opacity-100" : "opacity-0"
-                                                    )}
-                                                />
-                                                {tag.label}
-                                                </CommandItem>
-                                            ))}
-                                            </CommandGroup>
-                                        </CommandList>
-                                        </Command>
+                                        <CommandDialog open={popoverOpen} onOpenChange={setPopoverOpen}>
+                                            <CommandInput placeholder="Search tags..." />
+                                            <CommandList>
+                                                <CommandEmpty>No tags found.</CommandEmpty>
+                                                <CommandGroup>
+                                                {tagsList && tagsList.map((tag) => (
+                                                    <CommandItem
+                                                    key={tag.value}
+                                                    value={tag.label}
+                                                    onSelect={(currentValue) => {
+                                                        setValue(currentValue === value ? "" : currentValue);
+                                                        form.setValue("tagId", parseInt(tag.value));
+                                                        form.setValue("tagName", tag.label);
+                                                        setPopoverOpen(false);
+                                                    }}
+                                                    >
+                                                    <Check
+                                                        className={cn(
+                                                        "mr-2 h-4 w-4",
+                                                        value === tag.label ? "opacity-100" : "opacity-0"
+                                                        )}
+                                                    />
+                                                    {tag.label}
+                                                    </CommandItem>
+                                                ))}
+                                                </CommandGroup>
+                                            </CommandList>
+                                        </CommandDialog>
                                     </PopoverContent>
                                 </Popover>
                             </FormControl>

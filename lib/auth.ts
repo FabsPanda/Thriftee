@@ -22,7 +22,7 @@ export const auth = betterAuth({
   plugins:[
     stripe({
       stripeClient,
-      stripeWebhookSecret: process.env.NEXT_PUBLIC_PUBLISH_KEY!,
+      stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET!,
       createCustomerOnSignUp: true,
       onCustomerCreate: async ({ customer, stripeCustomer, user }, request) => {
         console.log(`Customer ${customer.id} created for user ${user.id}`);

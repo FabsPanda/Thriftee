@@ -9,6 +9,8 @@ import { db } from "@/server";
 import { products, productTags, tags } from "@/server/schema";
 import { desc, eq } from "drizzle-orm";
 
+export const revalidate = 60;
+
 export async function generateStaticParams() {
     const data = await db
     .select({
@@ -36,7 +38,7 @@ export default async function Page({params}: { params: { slug: string } }) {
     const product = await db.query.products.findFirst({
         where: eq(products.id, Number(slug)),
         with: {
-          tags: {
+          tag: {
             with: {
               tag: true,
             },
@@ -57,7 +59,7 @@ export default async function Page({params}: { params: { slug: string } }) {
                 <div className="flex flex-col flex-1">
                     <h2 className="text-2xl font-bold">{product.title}</h2>
                     <div className="text-secondary-foreground font-medium">
-                        {product.tags[0]?.tag?.name ?? "No tag"}
+                        {product.tag.tag.name ?? "No tag"}
                     </div>
                     <div>
                         <Stars rating={reviewAvg} totalReviews={product.reviews.length} />
