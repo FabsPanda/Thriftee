@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { Card } from '../ui/card';
 import { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import formatPrice from '@/lib/format-price';
 
 export default function Algolia() {
 
@@ -68,7 +69,7 @@ function Hit({hit}: {hit: {
                 <div className='flex w-full gap-12 items-center justify-between'>
                     <Image src={hit.images[0]} alt={hit.title} width={60} height={60} />
                     <p dangerouslySetInnerHTML={{ __html: hit._highlightResult.title.value }}></p>
-                    <p className='font-medium'>${hit.price}</p>
+                    <p className='font-medium'>{formatPrice(hit.price)}</p>
                 </div>
             </Link>
         </div>

@@ -50,6 +50,7 @@ export const newVerification = async (token: string) => {
   await db
     .update(user)
     .set({
+      emailVerified: true,
       emailVerifiedDate: new Date(),
     })
     .where(eq(user.email, existingToken.email!));

@@ -10,6 +10,7 @@ import { useMemo } from "react"
 import { weeklyChart } from "./weekly-chart"
 import { Bar, BarChart, ResponsiveContainer, Tooltip } from 'recharts';
 import { monthlyChart } from "./monthly-chart"
+import formatPrice from "@/lib/format-price"
 
 export default function Earnings({totalOrders}: {totalOrders: TotalOrders[]}) {
     
@@ -20,9 +21,8 @@ export default function Earnings({totalOrders}: {totalOrders: TotalOrders[]}) {
 
     const chartItems = totalOrders.map((order) => ({
             date: order.order.created!, 
-            revenue: order.order.total,
-        }))
-
+            revenue: order.quantity*order.product.price,
+        }));
 
     const activeChart = useMemo(() => {
         const weekly = weeklyChart(chartItems);
@@ -45,7 +45,7 @@ export default function Earnings({totalOrders}: {totalOrders: TotalOrders[]}) {
     return(
         <Card className="flex-1 shrink-0 h-full">
             <CardHeader>
-                <CardTitle>Your Revenue: </CardTitle>
+                <CardTitle>Your Revenue: {formatPrice(activeTotal)}</CardTitle>
                 <CardDescription>Here are your recent earnings</CardDescription>
                 <div className="flex items-center gap-2">
                     <Badge className={cn('cursor-pointer', filter === 'week' ? "bg-primary" : "bg-primary/25")} onClick={() => router.push("/dashboard/analytics/?filter=week", {
@@ -61,10 +61,9 @@ export default function Earnings({totalOrders}: {totalOrders: TotalOrders[]}) {
                             <Tooltip content={(props) => (
                                 <div>
                                     {props.payload?.map((item) => {
-                                        // console.log(item);
                                         return (
-                                            <div className="bg-primary py-2 px-4 rounded-md shadow-lg" key={item.payload.date}>
-                                                <p>Revenue: Rp {item.value}</p>
+                                            <div className="bg-emerald-400 bg-opacity-80 text-white py-2 px-4 rounded-md shadow-lg" key={item.payload.date}>
+                                                <p>Revenue: {formatPrice(item.value as number)}</p>
                                                 <p>Date: {item.payload.date}</p>
                                             </div>
                                         )

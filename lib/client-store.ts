@@ -25,7 +25,17 @@ export const useCartStore = create<CartState>()(
         (set) => ({
         cart: [],
         cartOpen: false,
-        setCartOpen: (val) => set({ cartOpen: val }),
+        setCartOpen: (val) =>
+            set((state) => {
+              const updates: Partial<CartState> = { cartOpen: val };
+              
+              // reset checkoutProgress if closing cart from confirmation page
+              if (!val && state.checkoutProgress === "confirmation-page") {
+                updates.checkoutProgress = "cart-page";
+              }
+          
+              return updates;
+            }),
         clearCart: () => set({cart: []}),
         checkoutProgress: "cart-page",
         setCheckoutProgress: (val) => set((state) => ({ checkoutProgress: val })),

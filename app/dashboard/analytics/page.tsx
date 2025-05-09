@@ -7,14 +7,44 @@ import {
     CardTitle,
   } from "@/components/ui/card";
 import { db } from "@/server";
-import { orderProduct } from "@/server/schema";
-import { desc } from "drizzle-orm";
+import { orderProduct, orders, user } from "@/server/schema";
+import { desc, eq } from "drizzle-orm";
 import Sales from "./sales";
 import Earnings from "./earnings";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 export const revalidate = 0;
 
 export default async function Analytics(){
+
+    const session = await auth.api.getSession({
+        headers: await headers()
+    });
+
+    let userRole = 'user';
+    
+    if(session?.user.email){
+        const existingUser = await db.query.user.findFirst({
+            where: eq(user.email, session?.user.email),
+        });
+
+        userRole = existingUser?.role ?? 'user';
+    }
+
+    if (userRole !== "admin") return redirect('/dashboard/settings');
+    
+    const products = await db.query.products.findMany({
+        with: {
+          tag: {
+            with: {
+              tag: true,
+            },
+          },
+        },
+        orderBy: (products, { asc }) => [asc(products.id)],
+      });
 
     const totalOrders = await db.query.orderProduct.findMany({
         orderBy: [desc(orderProduct.id)],

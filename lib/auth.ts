@@ -77,6 +77,7 @@ export const auth = betterAuth({
   //   },
   // },
   emailAndPassword: {
+    requireEmailVerification: true,
     enabled: true,
     sendResetPassword: async ({ user, url, token }, request) => {
       await sendEmail({
@@ -84,6 +85,17 @@ export const auth = betterAuth({
         subject: "Thriftee - Password Reset",
         text: `Click here to reset your password: ${url}`,
         html: `<p>Click <a href="${url}">here</a> to reset your password.</p>`,
+      });
+    },
+  },
+  emailVerification: {
+    sendVerificationEmail: async ( { user, url, token }, request) => {
+      await sendEmail({
+        // to: user.email,
+        to: "ignadrianw@gmail.com",
+        subject: "Thriftee - Email Verification",
+        text: `Click the link to verify your email: ${url}`,
+        html: `<p>Click <a href="${url}">here</a> to verify your email.</p>`,
       });
     },
   },

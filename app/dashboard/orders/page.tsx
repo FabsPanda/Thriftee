@@ -31,6 +31,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import Link from "next/link";
+import formatPrice from "@/lib/format-price";
 
 export default async function Page(){
     const session = await auth.api.getSession({
@@ -76,7 +77,7 @@ export default async function Page(){
                 {userOrders.map((order) => (
                     <TableRow key={order.id}>
                         <TableCell>{order.id}</TableCell>
-                        <TableCell>{order.total}</TableCell>
+                        <TableCell>{formatPrice(order.total)}</TableCell>
                         <TableCell>
                             <Badge className={order.status === "succeeded" ? "bg-green-700 hover:bg-green-800" : "bg-yellow-700 hover:bg:yellow-800"}>{order.status}</Badge>
                         </TableCell>
@@ -116,7 +117,7 @@ export default async function Page(){
                                     <DialogHeader>
                                         <DialogTitle>Order Details #{order.id}</DialogTitle>
                                         <DialogDescription>
-                                            Your order total is Rp {order.total}
+                                            Your order total is {formatPrice(order.total)}
                                         </DialogDescription>
                                     </DialogHeader>
                                     <Card className="overflow-auto p-2 flex flex-col gap-4">
@@ -135,7 +136,7 @@ export default async function Page(){
                                                         <TableCell>
                                                             <Image src={product.image![0]} width={48} height={48} alt={product.title} />
                                                         </TableCell>
-                                                        <TableCell>Rp {product.price}</TableCell>
+                                                        <TableCell>{formatPrice(product.price)}</TableCell>
                                                         <TableCell>{product.title}</TableCell>
                                                         <TableCell>{quantity}</TableCell>
                                                     </TableRow>

@@ -23,7 +23,7 @@ export const weeklyChart = (chartItems: {date: Date, revenue: number}[]) => {
             revenue: chartItems.filter((order) => checkDate(order.date, 2)).reduce((acc, price) => acc + price.revenue, 0)
         },
         {
-            date: '1 days ago',
+            date: '1 day ago',
             revenue: chartItems.filter((order) => checkDate(order.date, 1)).reduce((acc, price) => acc + price.revenue, 0)
         },
         {

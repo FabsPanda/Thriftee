@@ -50,7 +50,7 @@ export default function PaymentForm({ totalPrice }: {totalPrice: number}) {
         }
 
         const result  = await createPaymentIntent({
-            amount: totalPrice,
+            amount: totalPrice * 100,
             currency: "idr",
             cart: cart.map((item) => ({
                 quantity: item.quantity,

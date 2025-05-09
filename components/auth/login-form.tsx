@@ -23,6 +23,7 @@ import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "../ui/input-otp";
 import { cn } from "@/lib/utils";
+import { generateEmailVerificationToken } from "@/server/actions/tokens";
 
 export const LoginForm = () => {
   const router = useRouter();
@@ -53,6 +54,19 @@ export const LoginForm = () => {
         { email, password },
         {
           async onSuccess(context) {
+            const user = context.data?.user;
+            if (user && !user.emailVerified) {
+
+              const tokenRes = await generateEmailVerificationToken(user.email);
+              await authClient.sendVerificationEmail({ 
+                email: user.email,
+                callbackURL: "/auth/login"
+              });
+  
+              // setSuccess("Email not verified. A verification link has been sent.");
+              setStatus("idle");
+              return;
+            }
             if (context.data.twoFactorRedirect) {
               setShowTwoFactor(true);
 
@@ -74,13 +88,18 @@ export const LoginForm = () => {
           },
         }
       );
-
+      
       if (error) {
-        setError(error.message || "Login failed.");
+        if(error.message === "Email not verified") {
+          setSuccess("Email not verified. A verification link has been sent.");
+        } else {
+          setError(error.message || "Login failed.");
+        }
         setStatus("error");
       }
     } catch (err: any) {
       setError(err?.message || "Something went wrong.");
+      console.log("Awww");
       setStatus("error");
     }
   };

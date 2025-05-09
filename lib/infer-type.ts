@@ -45,8 +45,8 @@ export type ReviewsWithUser = InferResultType<
 
 export type TotalOrders = InferResultType<
     "orderProduct",
-    {
-        order: { with: { user: true } }
-        product: true,
-    }
+  {
+    order: { with: { user: true } }
+    product: true
+  }
 >

@@ -91,7 +91,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Suspense, useEffect, useState } from "react";
-import { LogOut, Moon, Settings, Sun, TruckIcon } from "lucide-react";
+import { Box, ChartColumn, CirclePlus, LogOut, Moon, Settings, Sun, TruckIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Switch } from "../ui/switch";
@@ -99,9 +99,9 @@ import { Switch } from "../ui/switch";
 
 
 
-export const UserButton = ({ user }: any) => {
+export const UserButton = ({ user, role }: any) => {
   // Extract userId from passed data
-  const userId = user?.email;
+  // const userId = user?.email;
   // console.log(userId);
 
   const router = useRouter()
@@ -164,6 +164,40 @@ export const UserButton = ({ user }: any) => {
           </div>
           <DropdownMenuSeparator />
 
+          {role === "admin" && (
+          <>
+            <DropdownMenuItem
+              onClick={() => router.push("/dashboard/analytics")}
+              className="group py-2 font-medium cursor-pointer "
+            >
+              <ChartColumn
+                size={14}
+                className="mr-3 group-hover:translate-x-1 transition-all duration-300 ease-in-out"
+              />{" "}
+              View Analytics
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => router.push("/dashboard/add-product")}
+              className="group py-2 font-medium cursor-pointer "
+            >
+              <CirclePlus
+                size={14}
+                className="mr-3 group-hover:translate-x-1 transition-all duration-300 ease-in-out"
+              />{" "}
+              Add a Product
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => router.push("/dashboard/product")}
+              className="group py-2 font-medium cursor-pointer "
+            >
+              <Box
+                size={14}
+                className="mr-3 group-hover:translate-x-1 transition-all duration-300 ease-in-out"
+              />{" "}
+              View Listed Products
+            </DropdownMenuItem>
+          </>
+          )}
           <DropdownMenuItem
             onClick={() => router.push("/dashboard/orders")}
             className="group py-2 font-medium cursor-pointer "

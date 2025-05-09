@@ -8,10 +8,10 @@ const domain = getBaseURL();
 
 export const sendVerificationEmail = async (email: string, token: string) => {
   const confirmLink = `${domain}/auth/new-verification?token=${token}`;
-  console.log(email + "EMAIL")
+  console.log(email + " EMAIL")
   const { data, error } = await resend.emails.send({
     from: "onboarding@resend.dev",
-    to: "hubertusalvito2@gmail.com",
+    to: "ignadrianw@gmail.com",
     subject: "Thriftee - Confirmation Email",
     html: `<p>Click to <a href='${confirmLink}'>confirm your email</p>`,
   });

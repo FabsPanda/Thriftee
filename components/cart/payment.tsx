@@ -25,7 +25,7 @@ export default function Payment() {
     return(
         <motion.div className='max-w-2xl mx-auto'>
             <Elements stripe={stripe} options={{ mode: 'payment', currency: 'idr', amount: totalPrice * 100, appearance: {theme: theme === "dark" ? "night" : "flat"} }}>
-                <PaymentForm totalPrice={totalPrice * 100} />
+                <PaymentForm totalPrice={totalPrice} />
             </Elements>
         </motion.div>
     )

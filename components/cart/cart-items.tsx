@@ -26,18 +26,20 @@ export default function CartItems() {
     }, [cart]);
 
     const priceInLetters = useMemo(() => {
-        return [...totalPrice.toFixed(2).toString()].map((letter) => {
-            return {letter, id: createId()}
-        })
-    }, [totalPrice])
+        const idrPrice = formatPrice(totalPrice);
+        const numericPart = idrPrice.replace(/[^\d,\.]/g, '');
+        return [...numericPart].map((letter) => {
+          return { letter, id: createId() };
+        });
+    }, [totalPrice]);
 
     return(
         <motion.div className="flex flex-col items-center">
             {cart.length === 0 && (
-                <div className="flex-col w-full flex items-center justify-center">
+                <div className="flex flex-col w-full items-center justify-center">
                     <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} transition={{ delay: 0.3, duration: 0.5 }}>
                         <h2 className="text-center text-2xl text-muted-foreground">Your cart is empty</h2>
-                        <Lottie className="h-64" animationData={emptyCart} />
+                        <Lottie className="h-60" animationData={emptyCart} />
                     </motion.div>
 
                 </div>
@@ -73,7 +75,8 @@ export default function CartItems() {
                                             <p className="text-md font-bold">{item.quantity}</p>
                                             <PlusCircle className="cursor-pointer hover:text-muted-foreground duration-300 transition-colors" onClick={() => {
                                                 addToCart({
-                                                    ...item
+                                                    ...item,
+                                                    quantity: 1
                                                 })
                                             }} size={14} />
                                         </div>
@@ -85,7 +88,7 @@ export default function CartItems() {
                 </div>
             )}
             <motion.div className="flex items-center justify-center relative overflow-hidden my-4">
-                <span className="text-md">Total: Rp </span>
+                <span className="text-md mr-1">Total: Rp</span>
                 <AnimatePresence mode="popLayout">
                     {priceInLetters.map((letter, i) => (
                         <motion.div key={letter.id}>

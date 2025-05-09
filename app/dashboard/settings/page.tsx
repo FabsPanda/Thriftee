@@ -12,7 +12,7 @@ export default async function Settings() {
         headers: await headers(),
       });
     if (!session) {
-        redirect("/");
+        redirect("/auth/login");
     }
     if (session) {
         const currUser = await db.query.user.findFirst({

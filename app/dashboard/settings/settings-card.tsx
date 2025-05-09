@@ -33,13 +33,14 @@ import { settings } from "@/server/actions/settings"
 import { UploadButton } from "@/app/api/uploadthing/upload"
 // import { Session } from "better-auth"
 import { authClient } from "@/lib/auth-client"
+import { useRouter } from "next/navigation"
 
 
 export default function SettingsCard({ sessionUser }: any) {
   const [error, setError] = useState<string | undefined>()
   const [success, setSuccess] = useState<string | undefined>()
   const [avatarUploading, setAvatarUploading] = useState(false)
-  console.log(sessionUser);
+//   console.log(sessionUser);
   const form = useForm<z.infer<typeof SettingsSchema>>({
     resolver: zodResolver(SettingsSchema),
     defaultValues: {
@@ -55,6 +56,7 @@ export default function SettingsCard({ sessionUser }: any) {
     onSuccess: (data) => {
       if (data.data?.success) {
         setSuccess(data.data?.success);
+        useRouter().refresh();
       }
       if (data.data?.error) {
         setError(data.data?.error);

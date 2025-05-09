@@ -65,7 +65,7 @@ export const settings = actionClient
       })
       console.log(isMatch);
       if (!isMatch) {
-        return { error: "Password does not match" }
+        return { error: "Current password does not match" }
       }
 
       const isSamePassword = await authCtx.password.verify({
