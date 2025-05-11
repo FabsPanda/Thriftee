@@ -40,6 +40,7 @@ export default function ProductForm(){
             title: "",
             description: "",
             price: 0,
+            stock: 0,
             upc: "",
             image:[],
         },
@@ -69,14 +70,15 @@ export default function ProductForm(){
                 return
             }
             if(data.success){
-                const id = parseInt(editMode)
-                form.setValue("title", data.success.title)
-                form.setValue("description", data.success.description)
-                form.setValue("price", data.success.price)
+                const id = parseInt(editMode);
+                form.setValue("title", data.success.title);
+                form.setValue("description", data.success.description);
+                form.setValue("price", data.success.price);
+                form.setValue("stock", data.success.stock || 0);
                 if(data.success.upc){
-                    form.setValue("upc", data.success.upc)
+                    form.setValue("upc", data.success.upc);
                 }
-                form.setValue("id", id)
+                form.setValue("id", id);
             }
             const existingImages =
             typeof data.success?.image === "string"
@@ -119,7 +121,7 @@ export default function ProductForm(){
   }
 
   return (
-    <Card>
+    <Card className="mb-4">
       <CardHeader>
         <CardTitle>{editMode ? 'Edit Product' : 'Create Product'}</CardTitle>
         <CardDescription>{editMode ? 'Make changes to existing product': 'Add a brand new product'}</CardDescription>
@@ -153,28 +155,51 @@ export default function ProductForm(){
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Product Price</FormLabel>
-                  <FormControl>
-                    <div className="flex items-center gap-2">
-                      <p>Rp</p>
-                      <Input
-                        type="number"
-                        placeholder="Your price in Rupiah"
-                        {...field}
-                        step="0.1"
-                        min={0}
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="flex flex-row gap-6">
+                <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>Product Price</FormLabel>
+                    <FormControl>
+                        <div className="flex items-center gap-2">
+                        <p>Rp</p>
+                        <Input
+                            type="number"
+                            placeholder="Your price in Rupiah"
+                            {...field}
+                            step="0.1"
+                            min={0}
+                        />
+                        </div>
+                    </FormControl>
+                    <FormMessage />
+                    </FormItem>
+                    )}
+                />
+                <FormField
+                control={form.control}
+                name="stock"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>Stock Quantity</FormLabel>
+                    <FormControl>
+                        <div className="flex items-center">
+                        <Input
+                            type="number"
+                            placeholder="Your stock quantity"
+                            {...field}
+                            step="1"
+                            min={0}
+                        />
+                        </div>
+                    </FormControl>
+                    <FormMessage />
+                    </FormItem>
+                    )}
+                />
+            </div>
             <FormField
               control={form.control}
               name="upc"
@@ -199,8 +224,11 @@ export default function ProductForm(){
                   <FormLabel>Product Images</FormLabel>
                   <FormControl>
                     <UploadDropzone
+                      appearance={{ 
+                        button: "bg-primary/75 ut-readying:bg-secondary px-2",
+                     }}
                       endpoint="variantUploader"
-                      className="ut-allowed-content:text-secondary-foreground ut-label:text-primary ut-upload-icon:text-primary/50 hover:bg-primary/10 transition-all duration-500 ease-in-out border-secondary ut-button:bg-primary/75 ut-button:ut-readying:bg-secondary"
+                      className="py-3 ut-allowed-content:text-secondary-foreground ut-label:text-primary ut-upload-icon:text-primary/50 hover:bg-primary/10 transition-all duration-500 ease-in-out border-secondary"
                       onUploadError={(error) => {
                         setError("image", {
                           type: "manual",

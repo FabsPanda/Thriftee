@@ -129,6 +129,7 @@ export const products = pgTable(
         id: serial('id').primaryKey(),
         description: text('description').notNull(),
         title: text('title').notNull(),
+        stock: integer("stock"),
         image: text("image").array(),
         createdAt: timestamp("createdAt").defaultNow(),
         price: real("price").notNull(),

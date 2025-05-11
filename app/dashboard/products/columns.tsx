@@ -156,10 +156,18 @@ export const columns: ColumnDef<ProductColumn>[] = [
         }
     },
     {
+        accessorKey: "stock",
+        header: "Stock Quantity",
+        cell: ({row}) => {
+            const stock = parseFloat(row.getValue('stock'));
+            return(<div className="font-medium text-xs">{stock}</div>);
+        }
+    },
+    {
         accessorKey: "image",
         header: "Images",
         cell: ({ row }) => {
-          const images = row.getValue("image") as string[]; // Ensure 'image' is a string array
+          const images = row.getValue("image") as string[];
           const cellTitle = row.getValue("title") as string;
       
           return (

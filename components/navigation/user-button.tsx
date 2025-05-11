@@ -187,7 +187,7 @@ export const UserButton = ({ user, role }: any) => {
               Add a Product
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => router.push("/dashboard/product")}
+              onClick={() => router.push("/dashboard/products")}
               className="group py-2 font-medium cursor-pointer "
             >
               <Box
@@ -224,7 +224,7 @@ export const UserButton = ({ user, role }: any) => {
                 onClick={(e) => e.stopPropagation()}
                 className="flex items-center group "
               >
-                <div className="relative flex mr-3">
+                <div className="relative flex mr-5">
                   <Sun
                     className="group-hover:text-yellow-600  absolute group-hover:rotate-180  dark:scale-0 dark:-rotate-90 transition-all duration-750 ease-in-out"
                     size={14}
@@ -234,7 +234,7 @@ export const UserButton = ({ user, role }: any) => {
                     size={14}
                   />
                 </div>
-                <p className="dark:text-blue-400 mr-3 text-secondary-foreground/75   text-yellow-600">
+                <p className="dark:text-blue-400 mr-3 text-secondary-foreground/75 text-yellow-600">
                   {theme[0].toUpperCase() + theme.slice(1)} Mode
                 </p>
                 <Switch

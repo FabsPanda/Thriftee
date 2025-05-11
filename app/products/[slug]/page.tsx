@@ -8,6 +8,7 @@ import { getReviewAverage } from "@/lib/review-average";
 import { db } from "@/server";
 import { products, productTags, tags } from "@/server/schema";
 import { desc, eq } from "drizzle-orm";
+import {NotFound} from "./not-found";
 
 export const revalidate = 60;
 
@@ -45,10 +46,9 @@ export default async function Page({params}: { params: { slug: string } }) {
           },
           reviews: true,
         },
-      });
+    });
     
-        
-        if(product) {
+    if(product) {
         const reviewAvg = getReviewAverage(product.reviews.map((r) => r.rating))
         return(
             <main>
@@ -70,11 +70,16 @@ export default async function Page({params}: { params: { slug: string } }) {
                     </p>
                     <div dangerouslySetInnerHTML={{ __html: product.description }}>
                     </div>
-                    <AddCart />
+                    <AddCart stock={product.stock!} />
                 </div>
             </section>
             <Reviews productID={product.id} />
             </main>  
         );
+    }
+    else {
+        return (
+            <NotFound />
+        )
     }
 }

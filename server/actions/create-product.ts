@@ -60,7 +60,8 @@ export const createProduct = actionClient.schema(ProductSchema).action(async ({p
                     id: parsedInput.id,
                     title: parsedInput.title,
                     price: parsedInput.price,
-                    images: parsedInput.image
+                    stock: parsedInput.stock,
+                    images: parsedInput.image,
                 }
             });
             revalidatePath("/dashboard/products")

@@ -45,6 +45,7 @@ export default async function Products() {
         id: product.id,
         title: product.title,
         price: product.price,
+        stock: product.stock,
         tags: product.tag,
         image: product.image ?? [],
     }));

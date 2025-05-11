@@ -4,8 +4,9 @@ import { auth } from "@/lib/auth";
 import { createOrderSchema } from "@/types/order-schema";
 import { createSafeActionClient } from "next-safe-action"
 import { headers } from "next/headers";
-import { orderProduct, orders } from "../schema";
+import { orderProduct, orders, products as productsTable } from "../schema";
 import { db } from "..";
+import { eq } from "drizzle-orm";
 
 
 const action = createSafeActionClient();
@@ -31,6 +32,22 @@ export const createOrder = action.schema(createOrderSchema).action(async ({ pars
             orderID: order[0].id,
             productID: productID
         });
+
+        const [product] = await db
+                            .select({ stock: productsTable.stock })
+                            .from(productsTable)
+                            .where(eq(productsTable.id, productID));
+        if (!product) {
+            return { error: `Product ID ${productID} not found` };
+        }
+        const updatedStock = product.stock! - quantity;
+        if(updatedStock < 0) {
+            return { error: `Insufficient stock for product ID ${productID}` }; 
+        }
+        await db
+            .update(productsTable)
+            .set({ stock: updatedStock })
+            .where(eq(productsTable.id, productID));
     })
     return { success: 'Order has been added' };
 })

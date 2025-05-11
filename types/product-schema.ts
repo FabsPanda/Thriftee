@@ -8,6 +8,10 @@ export const ProductSchema = z.object({
   description: z.string().min(40, {
     message: "Description must be at least 40 characters long",
   }),
+  stock: z.coerce
+    .number({
+      invalid_type_error: "Price must be a number",
+    }),
   price: z.coerce
     .number({
       invalid_type_error: "Price must be a number",

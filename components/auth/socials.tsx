@@ -56,14 +56,14 @@ export default function Socials() {
         <p>Sign in with Google</p>
         <FcGoogle className="w-5 h-5" />
       </Button>
-      <Button
+      {/* <Button
         variant={"outline"}
         className="flex gap-4 w-full"
         onClick={handleSignInWithGithub}
       >
         <p>Sign in with Github</p>
         <FaGithub className="w-5 h-5" />
-      </Button>
+      </Button> */}
     </div>
   );
 }

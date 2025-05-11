@@ -62,6 +62,7 @@ export async function addProductTag({
         id: products.id,
         title: products.title,
         price: products.price,
+        stock: products.stock,
         image: products.image,
         tagName: tags.name,
     })
@@ -77,6 +78,7 @@ export async function addProductTag({
                 id: productId,
                 title: productWithTags[0].title,
                 price: productWithTags[0].price,
+                stock: productWithTags[0].stock,
                 images: productWithTags[0].image,
                 tag: productWithTags[0].tagName
             }

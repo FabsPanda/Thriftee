@@ -73,11 +73,17 @@ export default function CartItems() {
                                                 })
                                             }} size={14} />
                                             <p className="text-md font-bold">{item.quantity}</p>
-                                            <PlusCircle className="cursor-pointer hover:text-muted-foreground duration-300 transition-colors" onClick={() => {
-                                                addToCart({
-                                                    ...item,
-                                                    quantity: 1
-                                                })
+                                            <PlusCircle className={`cursor-pointer transition-colors duration-300 
+                                            ${ item.quantity >= item.stock ? "cursor-not-allowed opacity-20" : "hover:text-muted-foreground" }`}
+                                            onClick={() => {
+                                                if(item.quantity < item.stock) {
+
+                                                    addToCart({
+                                                        ...item,
+                                                        quantity: 1
+                                                    });
+                                                    
+                                                }
                                             }} size={14} />
                                         </div>
                                     </TableCell>
