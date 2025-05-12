@@ -31,10 +31,10 @@ export default function ReviewChart({reviews}: { reviews: ReviewsWithUser[] }) {
                 {/* <Stars size={18} totalReviews={reviews.length} rating={totalRating} /> */}
                 <CardDescription className="text-lg font-medium"> {totalRating.toFixed(1)} </CardDescription>
             </div>
-            {getRatingByStars.map((rating, index) => (
+            {getRatingByStars.slice().reverse().map((rating, index) => (
                 <div key={index} className="flex gap-2 justify-between items-center">
                     <p className="text-xs font-medium flex gap-1">
-                        {index + 1} <span>stars</span>
+                        {5 - index} <span>stars</span>
                     </p>
                     <Progress value={rating} />
                 </div>

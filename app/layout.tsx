@@ -25,6 +25,9 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: "THRIFTEE",
   description: "Thriftee-Desc",
+  icons: {
+    icon: "/favicon_thriftee2.png"
+  }
 };
 
 export default function RootLayout({
