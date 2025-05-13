@@ -43,24 +43,6 @@ export async function POST(req) {
 
     const token = await snap.createTransactionToken(parameter);
 
-
-    //   const response = await axios
-    //           .get(`https://api.sandbox.midtrans.com/v2/${orderId}/status`, {
-    //             headers: {
-    //                 'Accept': 'application/json',
-    //                 'Content-Type': 'application/json',
-    //                 'Authorization': 'Basic U0ItTWlkLXNlcnZlci1YVUt0S2ZJSklfTUE2amFCN3A1TTFTeV86'
-    //             }
-    //           })
-    //           .then((res) => {
-    //             console.log(res.data);
-    //           })
-    //           .catch((err) => {
-    //             console.log(err);
-    //           });
-
-    //   console.log(res.transaction_status);
-
     return NextResponse.json({
         token,
         orderId
@@ -84,7 +66,7 @@ export async function GET(req) {
                   headers: {
                       'Accept': 'application/json',
                       'Content-Type': 'application/json',
-                      'Authorization': 'Basic U0ItTWlkLXNlcnZlci1YVUt0S2ZJSklfTUE2amFCN3A1TTFTeV86'
+                      'Authorization': `Basic ${base64Key}`
                   }
                 })
                 .then((res) => {
