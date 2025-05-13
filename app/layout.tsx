@@ -6,6 +6,7 @@ import Nav from "@/components/navigation/nav";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import Toaster from "@/components/ui/toaster";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +38,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <Script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key={process.env.NEXT_PUBLIC_CLIENT_KEY} strategy="afterInteractive"></Script>
       <body suppressHydrationWarning
         className={roboto.className}
       >

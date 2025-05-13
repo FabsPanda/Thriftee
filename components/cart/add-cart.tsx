@@ -10,7 +10,7 @@ import { redirect, useSearchParams } from "next/navigation";
 
 
 export default function AddCart({ stock }: { stock: number }) {
-    const { addToCart, cart, setCartOpen } = useCartStore();
+    const { addToCart, cart, setCartOpen, setCheckoutProgress } = useCartStore();
     const [quantity, setQuantity] = useState(1);
     const params = useSearchParams();
     const productId = Number(params.get('id'));
@@ -60,6 +60,7 @@ export default function AddCart({ stock }: { stock: number }) {
             <Button 
                 onClick={() => {
                     if (isInCart) {
+                        setCheckoutProgress("cart-page");
                         setCartOpen(true); // Open the cart drawer if the product is in the cart
                     } else {
                         toast.success(`Added ${title} to your cart!`);
