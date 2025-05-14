@@ -6,7 +6,7 @@ import { createSafeActionClient } from "next-safe-action"
 import { headers } from "next/headers";
 import { db } from "..";
 import { and, eq } from "drizzle-orm";
-import { reviews } from "../schema";
+import { reviews, orderProduct, orders } from "../schema";
 import { revalidatePath } from "next/cache";
 
 const action = createSafeActionClient();
@@ -24,6 +24,24 @@ export const addReview = action.schema(reviewSchema).action(async ({ parsedInput
         });
         if(reviewExists) {
             return { error: "You have already reviewed this product" }
+        }
+
+
+        const purchase = await db
+        .select()
+        .from(orderProduct)
+        .innerJoin(orders, eq(orderProduct.orderID, orders.id))
+        .where(
+          and(
+            eq(orderProduct.productID, productID),
+            eq(orders.userID, session.user.id),
+            eq(orders.status, "succeeded")
+          )
+        )
+        .limit(1);
+
+        if (!purchase || purchase.length === 0) {
+            return { error: "You can only review products you have purchased" };
         }
 
         const newReview = await db

@@ -41,7 +41,7 @@ export const emailRegister = actionClient
       email,
       name,
       password,
-      callbackURL: "/auth/login"
+      // callbackURL: "/auth/login"
     });
 
 
@@ -49,12 +49,19 @@ export const emailRegister = actionClient
       return { error: error.message || "Registration failed at auth layer" };
     }
 
+
+
     const verificationToken = await generateEmailVerificationToken(email);
 
-    await sendVerificationEmail(
-      verificationToken[0].email!,
-      verificationToken[0].token!,
-    );
+    // await sendVerificationEmail(
+    //   verificationToken[0].email!,
+    //   verificationToken[0].token!,
+    // );
 
-    return { success: "Confirmation Email Sent!" };
+    // await authClient.sendVerificationEmail({ 
+    //   email: email,
+    //   callbackURL: "/auth/verify-email"
+    // });
+
+    return { success: "Verification email sent! Please verify your account." };
   });

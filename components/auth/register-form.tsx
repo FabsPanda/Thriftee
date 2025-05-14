@@ -44,9 +44,10 @@ export const RegisterForm = () => {
     onSuccess(data) {
       if (data.data?.error) setError(data.data.error);
       if (data.data?.success) {
-        setSuccess(data.data.success);
+        router.push("/auth/email-verif-sent");
+        // setSuccess(data.data.success);
         // Redirect to login page after successful registration (optional)
-        router.push("/auth/login");
+        // router.push("/auth/login");
       }
     },
   });
@@ -153,14 +154,11 @@ export const RegisterForm = () => {
               />
               <FormSuccess message={success} />
               <FormError message={error} />
-              <Button size={"sm"} variant={"link"} asChild>
-                <Link href="/auth/reset">Forgot your password</Link>
-              </Button>
             </div>
             <Button
               type="submit"
               className={cn(
-                "w-full",
+                "w-full mt-5",
                 status === "executing" ? "animate-pulse" : ""
               )}
             >

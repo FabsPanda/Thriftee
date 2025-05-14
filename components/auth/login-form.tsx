@@ -56,19 +56,19 @@ export const LoginForm = () => {
         { email, password },
         {
           async onSuccess(context) {
-            const user = context.data?.user;
-            if (user && !user.emailVerified) {
+            // const user = context.data?.user;
+            // if (user && !user.emailVerified) {
 
-              const tokenRes = await generateEmailVerificationToken(user.email);
-              await authClient.sendVerificationEmail({ 
-                email: user.email,
-                callbackURL: "/auth/login"
-              });
+            //   const tokenRes = await generateEmailVerificationToken(user.email);
+            //   await authClient.sendVerificationEmail({ 
+            //     email: user.email,
+            //     callbackURL: "/auth/verify-email"
+            //   });
   
-              // setSuccess("Email not verified. A verification link has been sent.");
-              setStatus("idle");
-              return;
-            }
+            //   // setSuccess("Email not verified. A verification link has been sent.");
+            //   setStatus("idle");
+            //   return;
+            // }
             if (context.data.twoFactorRedirect) {
               setShowTwoFactor(true);
 
@@ -93,7 +93,14 @@ export const LoginForm = () => {
       
       if (error) {
         if(error.message === "Email not verified") {
-          setSuccess("Email not verified. A verification link has been sent.");
+          router.push("/auth/email-verif-sent");
+          // await authClient.sendVerificationEmail({ 
+          //   email: email,
+          //   callbackURL: "/auth/verify-email"
+          // });
+          // setSuccess("Email not verified. A verification link has been sent.");
+          setStatus("idle");
+          return;
         } else {
           setError(error.message || "Login failed.");
         }

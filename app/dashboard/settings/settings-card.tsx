@@ -176,7 +176,7 @@ export default function SettingsCard({ sessionUser }: any) {
                       }}
                       content={{
                         button({ ready }) {
-                          if (ready) return <div>Change Avatar</div>
+                          if (ready) return <div className="text-primary">Change Avatar</div>
                           return <div>Uploading...</div>
                         },
                       }}
