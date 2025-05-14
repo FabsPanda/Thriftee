@@ -90,12 +90,16 @@ export const auth = betterAuth({
   },
   emailVerification: {
     sendVerificationEmail: async ( { user, url, token }, request) => {
+      const callbackUrl = "/auth/verify-email";
+
+      const modifiedUrl = new URL(url);
+      modifiedUrl.searchParams.set("callbackURL", callbackUrl);
       await sendEmail({
         // to: user.email,
         to: "ignadrianw@gmail.com",
         subject: "Thriftee - Email Verification",
-        text: `Click the link to verify your email: ${url}`,
-        html: `<p>Click <a href="${url}">here</a> to verify your email.</p>`,
+        text: `Click the link to verify your email: ${modifiedUrl.toString()}`,
+        html: `<p>Click <a href="${modifiedUrl.toString()}">here</a> to verify your email.</p>`,
       });
     },
   },

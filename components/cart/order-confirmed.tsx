@@ -18,12 +18,36 @@ export default function OrderConfirmed() {
                 <Lottie className="h-56 my-4" animationData={orderConfirmed} />
             </motion.div>
             <h2 className="text-2xl font-medium">Thank you for your purchase!</h2>
-            <Link href={"/dashboard/orders/"}>
+            {/* <Link href={"/dashboard/orders/"}>
                 <Button variant={"secondary"} onClick={() => {
                     setCheckoutProgress("cart-page");
                     setCartOpen(false);
                 }}>View your order</Button>
-            </Link>
+            </Link> */}
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-4 w-full sm:w-auto">
+                <Link href="/dashboard/orders/">
+                    <Button
+                        variant="secondary"
+                        onClick={() => {
+                            setCheckoutProgress("cart-page");
+                            setCartOpen(false);
+                        }}
+                    >
+                        View your order
+                    </Button>
+                </Link>
+
+                <Link href="/">
+                    <Button
+                        onClick={() => {
+                            setCheckoutProgress("cart-page");
+                            setCartOpen(false);
+                        }}
+                    >
+                        Return to homepage
+                    </Button>
+                </Link>
+            </div>
         </div>
     )
 }

@@ -47,7 +47,7 @@ export default function RootLayout({
             {children}
           </div>
 
-          <footer className="bg-primary py-1 mt-5 rounded-t-md shadow-sm dark:bg-gray-800 w-full">
+          <footer className="bg-primary py-1 mt-5 rounded-t-md shadow-sm dark:bg-[#1E1E1E] dark:text-[#F5F5F5] w-full">
             <div className="mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
               <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
                 © 2025 <a href="/" className="hover:underline">Thriftee</a>. All Rights Reserved.
