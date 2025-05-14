@@ -136,7 +136,7 @@ export default function ProductTag(
                         name="tagName"
                         render={({ field }) => (
                             <FormItem>
-                            <FormLabel>Tag Name</FormLabel>
+                            <FormLabel className="mr-2">Tag Name</FormLabel>
                             <FormControl>
                                 <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
                                     <PopoverTrigger asChild>

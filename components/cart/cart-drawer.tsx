@@ -25,7 +25,7 @@ export default function CartDrawer() {
                             </motion.span>
                         )}
                     </AnimatePresence>
-                    <ShoppingBag />
+                    <ShoppingBag className={cartOpen ? "text-emerald-400" : "hover:text-emerald-400"} />
                 </div>
             </DrawerTrigger>
             <DrawerContent className="fixed bottom-0 left-0 max-h-[70vh] min-h-[50vh]">

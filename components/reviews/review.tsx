@@ -15,7 +15,7 @@ export default function Review({ reviews }: { reviews: ReviewsWithUser[] }) {
                 <Card key={review.id} className="p-4">
                     <div className="flex gap-2 items-center">
                         <Image
-                            className="rounded-full"
+                            className="rounded-full max-w-[32px] max-h-[32px]"
                             width={32}
                             height={32}
                             alt={review.user.name!}

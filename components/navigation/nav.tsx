@@ -40,7 +40,7 @@ export default async function Nav() {
           <li className="flex flex-1">
             <Link href={"/"} aria-label="Thriftee Logo"><Logo/></Link>
           </li>
-          <li className="relative flex items-center hover:bg-muted">
+          <li className="relative flex items-center">
             <CartDrawer />
           </li>
           {!session ? (

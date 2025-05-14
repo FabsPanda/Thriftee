@@ -25,7 +25,7 @@ import formatPrice from "@/lib/format-price";
   export default function Sales({totalOrders}: {totalOrders: TotalOrders[]}) {
     const sliced = totalOrders.slice(0, 8)
     return(
-        <Card className="flex-1 shrink-0">
+        <Card className="flex-1 shrink-0 mb-2">
             <CardHeader>
                 <CardTitle>New Sales</CardTitle>
                 <CardDescription>Here are your recent sales</CardDescription>
@@ -54,10 +54,9 @@ import formatPrice from "@/lib/format-price";
 
                                         </div>
                                     ) : (
-                                        <div className="flex gap-2 items-center justify-center">
+                                         <div className="flex gap-2 w-32 items-center">
                                             <Image src={placeholderUser} width={25} height={25} alt='user not found' className="rounded-full" />
-                                            <p className="text-xs font-medium">User not found</p>
-
+                                            <p className="text-xs font-medium">{order.user.name}</p>
                                         </div>
                                     )}
                                 </TableCell>

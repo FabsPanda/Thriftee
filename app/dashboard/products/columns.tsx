@@ -63,7 +63,7 @@ const ActionCell = ({row}: {row: Row<ProductColumn>}) => {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-                <DropdownMenuItem className="dark:focus:bg-primary focus:bg-primary/50 cursor-pointer">
+                <DropdownMenuItem className="dark:focus:bg-secondary focus:bg-primary/50 cursor-pointer">
                     <Link href={`/dashboard/add-product?id=${product.id}`}>
                         Edit Product
                     </Link>

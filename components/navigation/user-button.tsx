@@ -152,7 +152,7 @@ export const UserButton = ({ user, role }: any) => {
               <Image
                 src={user.image}
                 alt={user.name!}
-                className="rounded-full"
+                className="rounded-full max-w-[36px] max-h-[36px]"
                 width={36}
                 height={36}
               />

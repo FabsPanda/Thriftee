@@ -24,6 +24,7 @@ import { emailRegister } from "@/server/actions/email-register";
 import { FormSuccess } from "./form-success";
 import { FormError } from "./form-error";
 import { useRouter } from "next/navigation";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 
 export const RegisterForm = () => {
   const router = useRouter();
@@ -38,6 +39,7 @@ export const RegisterForm = () => {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [showPassword, setShowPassword] = useState(false)
   const { execute, status } = useAction(emailRegister, {
     onSuccess(data) {
       if (data.data?.error) setError(data.data.error);
@@ -128,12 +130,21 @@ export const RegisterForm = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="*********"
-                        type="password"
-                        autoComplete="current-password"
-                      />
+                        <div className="relative w-full">
+                            <Input
+                                className="pr-5"
+                                {...field}
+                                placeholder="*********"
+                                type={showPassword ? "text" : "password"}
+                                autoComplete="current-password"
+                            />
+                            <div
+                                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                {showPassword ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+                            </div>
+                        </div>
                     </FormControl>
                     <FormDescription />
                     <FormMessage />

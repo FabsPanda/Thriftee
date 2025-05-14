@@ -13,17 +13,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AuthCard } from "./auth-card";
 import { LoginSchema } from "@/types/login-schema";
 import * as z from "zod";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useState } from "react";
 import { FormSuccess } from "./form-success";
 import { FormError } from "./form-error";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "../ui/input-otp";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { cn } from "@/lib/utils";
 import { generateEmailVerificationToken } from "@/server/actions/tokens";
+import { EyeOffIcon, EyeIcon } from "lucide-react";
 
 export const LoginForm = () => {
   const router = useRouter();
@@ -41,6 +42,7 @@ export const LoginForm = () => {
   const [success, setSuccess] = useState("");
   const [status, setStatus] = useState<"idle" | "executing" | "success" | "error">("idle");
   const [showTwoFactor, setShowTwoFactor] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (values: z.infer<typeof LoginSchema>) => {
     setStatus("executing");
@@ -139,7 +141,7 @@ export const LoginForm = () => {
 
   return (
     <AuthCard
-      cardTitle="Welcome back!"
+      cardTitle="Welcome!"
       backButtonHref="/auth/register"
       backButtonLabel="Create a new account"
       showSocials
@@ -191,22 +193,31 @@ export const LoginForm = () => {
                   )}
                 />
                 <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
+                control={form.control}
+                name="password"
+                render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="*********"
-                          type="password"
-                          autoComplete="current-password"
-                        />
-                      </FormControl>
-                      <FormMessage />
+                        <FormLabel>Password</FormLabel>
+                        <FormControl>
+                            <div className="relative w-full">
+                                <Input
+                                    className="pr-5"
+                                    {...field}
+                                    placeholder="*********"
+                                    type={showPassword ? "text" : "password"}
+                                    autoComplete="current-password"
+                                />
+                                <div
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+                                </div>
+                            </div>
+                        </FormControl>
+                        <FormMessage />
                     </FormItem>
-                  )}
+                )}
                 />
               </>
             )}

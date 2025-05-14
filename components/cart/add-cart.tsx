@@ -40,7 +40,7 @@ export default function AddCart({ stock }: { stock: number }) {
                         if(quantity > 1) {
                             setQuantity(quantity - 1);
                         }
-                    }} variant={'secondary'} className="text-primary">
+                    }} variant={'secondary'} disabled={quantity === 1} className="text-primary">
                         <Minus size={18} strokeWidth={3} />
                     </Button>
                     <Button className="flex-1">
@@ -52,7 +52,7 @@ export default function AddCart({ stock }: { stock: number }) {
                         } else {
                             toast.warning(`Only ${stock} items in stock`);
                         }
-                    }} variant={'secondary'} className="text-primary">
+                    }} variant={'secondary'} disabled={quantity >= stock} className="text-primary">
                         <Plus size={18} strokeWidth={3} />
                     </Button>
                 </div>

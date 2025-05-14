@@ -34,12 +34,15 @@ import { UploadButton } from "@/app/api/uploadthing/upload"
 // import { Session } from "better-auth"
 import { authClient } from "@/lib/auth-client"
 import { useRouter } from "next/navigation"
+import { EyeIcon, EyeOffIcon } from "lucide-react"
 
 
 export default function SettingsCard({ sessionUser }: any) {
   const [error, setError] = useState<string | undefined>()
   const [success, setSuccess] = useState<string | undefined>()
   const [avatarUploading, setAvatarUploading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
 //   console.log(sessionUser);
   const form = useForm<z.infer<typeof SettingsSchema>>({
     resolver: zodResolver(SettingsSchema),
@@ -199,15 +202,23 @@ export default function SettingsCard({ sessionUser }: any) {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="********"
-                      disabled={
-                        status === "executing" || sessionUser.isOAuth
-                      }
-                      {...field}
-                    />
+                    <div className="relative w-full">
+                        <Input
+                        placeholder="********"
+                        disabled={
+                            status === "executing" || sessionUser.isOAuth
+                        }
+                        type={showPassword ? "text" : "password"}
+                        {...field}
+                        />
+                        <div
+                            className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground"
+                            onClick={() => setShowPassword(!showPassword)}
+                        >
+                            {showPassword ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+                        </div>
+                    </div>
                   </FormControl>
-
                   <FormMessage />
                 </FormItem>
               )}
@@ -217,18 +228,26 @@ export default function SettingsCard({ sessionUser }: any) {
               name="newPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>New Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="*******"
-                      disabled={
-                        status === "executing" || sessionUser.isOAuth
-                      }
-                      {...field}
-                    />
-                  </FormControl>
-
-                  <FormMessage />
+                    <FormLabel>New Password</FormLabel>
+                    <FormControl>
+                    <div className="relative w-full">
+                        <Input
+                        placeholder="********"
+                        disabled={
+                            status === "executing" || sessionUser.isOAuth
+                        }
+                        type={showNewPassword ? "text" : "password"}
+                        {...field}
+                        />
+                        <div
+                            className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground"
+                            onClick={() => setShowNewPassword(!showNewPassword)}
+                        >
+                            {showNewPassword ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+                        </div>
+                    </div>
+                    </FormControl>
+                    <FormMessage />
                 </FormItem>
               )}
             />

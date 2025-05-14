@@ -28,6 +28,7 @@ import { cn } from '@/lib/utils'
 import { useAction } from 'next-safe-action/hooks'
 import { addReview } from '@/server/actions/add-review'
 import { toast } from 'sonner'
+import { useEffect, useState } from 'react'
 
 
 export default function ReviewsForm() {
@@ -35,6 +36,7 @@ export default function ReviewsForm() {
     const params = useSearchParams();
     const productID = Number(params.get('id'));
 
+    const [open, setOpen] = useState(false)
     
     const form = useForm<z.infer<typeof reviewSchema>>({
         resolver: zodResolver(reviewSchema),
@@ -44,6 +46,12 @@ export default function ReviewsForm() {
             productID,
         }
     });
+
+    useEffect(() => {
+        if (!open) {
+        form.reset()
+        }
+    }, [open])
 
     const {execute, status} = useAction(addReview, {
         onSuccess(data) {
@@ -67,8 +75,8 @@ export default function ReviewsForm() {
     }
 
     return(
-        <Popover>
-            <PopoverTrigger asChild>
+        <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger  asChild>
                 <div className="w-full">
                     <Button className='font-medium w-full' variant={ "secondary" }>Leave a review</Button>
                 </div>
