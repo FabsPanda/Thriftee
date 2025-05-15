@@ -47,13 +47,13 @@ export default function RootLayout({
             {children}
           </div>
 
-          <footer className="bg-primary py-1 mt-5 rounded-t-md shadow-sm dark:bg-[#1E1E1E] dark:text-[#F5F5F5] w-full">
+          <footer className="bg-primary py-1 mt-5 rounded-t-md shadow-sm dark:bg-[#111111] dark:text-[#F5F5F5] w-full">
             <div className="mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
-              <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
+              <span className="text-sm text-gray-200 sm:text-center dark:text-white">
                 © 2025 <a href="/" className="hover:underline">Thriftee</a>. All Rights Reserved.
               </span>
-              <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
-                <li><a href="#" className="hover:underline me-4 md:me-6">About</a></li>
+              <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-200 dark:text-white sm:mt-0">
+                <li><a href="/about-us" className="hover:underline me-4 md:me-6">About Us</a></li>
                 <li><a href="#" className="hover:underline me-4 md:me-6">Privacy Policy</a></li>
                 <li><a href="#" className="hover:underline">Contact</a></li>
               </ul>

@@ -7,6 +7,8 @@ import formatPrice from "@/lib/format-price"
 import { useMemo } from "react"
 import { useSearchParams } from "next/navigation"
 import { ProductWithTag, TagsWithProducts } from "@/lib/infer-type"
+import { BadgeCheck } from "lucide-react"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip"
 
 type ProductTypes = {
     products: ProductWithTag[]
@@ -46,17 +48,33 @@ export default function Products({products}: ProductTypes) {
                     loading="lazy"
                     />
                     <div className="flex justify-between">
-                    <div className="font-medium">
-                        <h2>{product.title}</h2>
-                        <p className="text-sm text-muted-foreground">
-                        {product.tag.tag.name}
-                        </p>
-                    </div>
-                    <div>
-                        <Badge className="text-sm" variant="secondary">
-                        {formatPrice(product.price)}
-                        </Badge>
-                    </div>
+                        <div className="font-medium">
+                            <div className="flex flex-row gap-2 items-center">
+                                <h2>{product.title}</h2>    
+                                {!product.verified && (
+                                    <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                        <span>
+                                            <BadgeCheck className="text-emerald-500 dark:text-emerald-300" />
+                                        </span>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                        Authenticity Verified
+                                        </TooltipContent>
+                                    </Tooltip>
+                                    </TooltipProvider>
+                                )}
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                            {product.tag.tag.name}
+                            </p>
+                        </div>
+                        <div>
+                            <Badge className="text-sm" variant="secondary">
+                            {formatPrice(product.price)}
+                            </Badge>
+                        </div>
                     </div>
                 </Link>
             ))}
