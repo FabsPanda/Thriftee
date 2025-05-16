@@ -38,8 +38,8 @@ function Section({ title, content, icon }: { title: string; content: string; ico
   return (
     <div className="text-left">
       <h2 className="text-xl font-semibold flex items-center gap-2">
-        {icon}
         {title}
+        {icon}
       </h2>
       <p className="text-muted-foreground mt-1">{content}</p>
     </div>

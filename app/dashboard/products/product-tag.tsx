@@ -101,7 +101,7 @@ export default function ProductTag(
       }, []);
 
     const onSubmit = async (values: z.infer<typeof TagSchema>) => {
-        console.log(values.productId);
+        // console.log(values.productId);
 
         const response = await addProductTag({
             productId: values.productId,
