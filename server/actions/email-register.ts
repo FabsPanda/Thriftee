@@ -8,14 +8,13 @@ import { eq } from "drizzle-orm";
 import { generateEmailVerificationToken } from "./tokens";
 import { user } from "../schema";
 import { sendVerificationEmail } from "./emails";
-import { signUp } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
 
 export const emailRegister = actionClient
   .schema(RegisterSchema)
   .action(async ({ parsedInput: { email, name, password } }) => {
     //hashing password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
+    // const hashedPassword = await bcrypt.hash(password, 10);
     //cek user yang udah ada
     const existingUser = await db.query.user.findFirst({
       where: eq(user.email, email),
@@ -25,12 +24,12 @@ export const emailRegister = actionClient
     if (existingUser) {
       if (!existingUser.emailVerified) {
         const verificationToken = await generateEmailVerificationToken(email);
-
+       
         await sendVerificationEmail(
-          verificationToken[0].email,
-          verificationToken[0].token
+          verificationToken[0].email!,
+          verificationToken[0].token!,
         );
-
+        
         return { success: "Email Confirmation resent" };
       }
       return { error: "Email already in use" };
@@ -38,22 +37,31 @@ export const emailRegister = actionClient
     //return { success: "done" };
 
     //logic buat user yang gak registered
-    const { error } = await signUp.email({
+    const { error } = await authClient.signUp.email({
       email,
       name,
       password,
+      // callbackURL: "/auth/login"
     });
+
 
     if (error) {
       return { error: error.message || "Registration failed at auth layer" };
     }
 
+
+
     const verificationToken = await generateEmailVerificationToken(email);
 
-    await sendVerificationEmail(
-      verificationToken[0].email,
-      verificationToken[0].token
-    );
+    // await sendVerificationEmail(
+    //   verificationToken[0].email!,
+    //   verificationToken[0].token!,
+    // );
 
-    return { success: "Confirmation Email Sent!" };
+    // await authClient.sendVerificationEmail({ 
+    //   email: email,
+    //   callbackURL: "/auth/verify-email"
+    // });
+
+    return { success: "Verification email sent! Please verify your account." };
   });

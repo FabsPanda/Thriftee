@@ -1,13 +1,13 @@
 "use client";
 
-import {signIn} from '@/lib/auth-client'
+import {authClient} from '@/lib/auth-client'
 
 export default function SignIn(){
     return (
       <div>
         <button
           onClick={async () => {
-            await signIn.social({
+            await authClient.signIn.social({
               provider: "github",
               callbackURL: "/",
             });
@@ -18,7 +18,7 @@ export default function SignIn(){
           <br />
         <button
           onClick={async () => {
-            await signIn.social({
+            await authClient.signIn.social({
               provider: "google", 
               callbackURL: "/",
             });

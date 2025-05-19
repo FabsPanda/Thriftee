@@ -8,7 +8,22 @@ export default {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+	container: {
+		padding: "2rem",
+		screens: {
+			"2xl": "1400px"
+		}
+	},
   	extend: {
+		maxWidth: {
+			"8xl": "88rem"
+		},
+		minHeight: {
+			"50vh": "50vh"
+		},
+		height: {
+			"88": "22rem"
+		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

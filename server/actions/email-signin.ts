@@ -7,58 +7,63 @@ import { eq } from "drizzle-orm";
 import { user } from "../schema";
 import { generateEmailVerificationToken } from "./tokens";
 import { sendVerificationEmail } from "./emails";
-import { signIn } from "@/lib/auth-client";
+// import { signIn } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
 
 export const emailSignIn = actionClient
   .schema(LoginSchema)
-  .action(async ({ parsedInput: { email, password, code } }) => {
-    try{
-      const existingUser = await db.query.user.findFirst({
-      where: eq(user.email, email),
-    });
-
-    if (existingUser?.email !== email) {
-      return { error: "Email not found" };
-    }
-
-    //user not verified
-    if (!existingUser.emailVerifiedDate) {
-      const verificationToken = await generateEmailVerificationToken(
-        existingUser.email
-      );
-      await sendVerificationEmail(
-        verificationToken[0].email,
-        verificationToken[0].token
-      );
-      return { success: "Confirmation Email Sent" };
-    }
-
-    // await signIn("credentials", {
-    //   email,
-    //   password,
-    //   redirectTo: "/",
-    // });
-
+  .action(async ({ parsedInput: { email, password } }) => {
     try {
-      const { data, error } = await signIn.email({
-        email,
-        password,
+      const existingUser = await db.query.user.findFirst({
+        where: eq(user.email, email),
       });
 
-      if (error) {
-        console.log("gagal");
-        throw new Error(error.message);
+      if (!existingUser) {
+        return { error: "Email not found" };
       }
 
-      // return { success: true };
-    } catch (err: any) {
-      console.log("gagal2");
-      return { error: err.message || "Something went wrong" };
-    }
+      // Uncomment if you want to require verification
+      // if (!existingUser.emailVerifiedDate) {
+      //   const verificationToken = await generateEmailVerificationToken(email);
+      //   await sendVerificationEmail(
+      //     verificationToken[0].email,
+      //     verificationToken[0].token
+      //   );
+      //   return { success: "Confirmation Email Sent" };
+      // }
 
-    return { success: email };
-    }catch(error){
-      console.log(error);
+      // send the user otp
+      const { data, error } = await authClient.twoFactor.sendOtp()
+      if (data) {
+          // redirect or show the user to enter the code
+          alert("An OTP has been sent to your email. Please check your inbox and enter the code below.");
+
+      } else {
+        // Handle error sending OTP
+        if (error) {
+            alert("There was an issue sending the OTP. Please try again.");
+        }
+      }
+
+      // verifying otp
+      const verifyOtp = async (code: string) => {
+        try {
+            await authClient.twoFactor.verifyOtp({ code });
+            
+            // On success, you can redirect the user to their dashboard or another page
+            alert("OTP verified successfully!");
+            // window.location.href = "/dashboard/";
+            
+        } catch (error) {
+            // On error, show an alert with the error message
+            alert(error || "An error occurred during OTP verification. Please try again.");
+        }
+    };
+
+
+      return { success: "Login successful!", redirectTo: "/" };
+    } catch (err: any) {
+      console.error("Login error:", err);
+      return { error: err?.message || "Something went wrong" };
     }
-    
   });

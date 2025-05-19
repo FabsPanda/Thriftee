@@ -1,13 +1,18 @@
+import { create } from 'domain';
 import { createAuthClient } from "better-auth/react";
+import { twoFactorClient } from "better-auth/client/plugins"
 
-export const {signIn, signOut, signUp, useSession} = createAuthClient({
-    baseURL: process.env.BETTER_AUTH_URL!
-})
 
-// const authClient = createAuthClient();
+export const authClient = createAuthClient({
+    baseURL: process.env.BETTER_AUTH_URL!,  
+    plugins: [
+        twoFactorClient()
+    ]
+});
 
-// export const signIn = async () => {
-//   const data = await authClient.signIn.social({
-//     provider: "github",
-//   });
-// };
+export const {
+    signIn,
+    signOut,
+    signUp,
+    useSession
+} = authClient;

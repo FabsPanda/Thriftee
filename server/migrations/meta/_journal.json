@@ -194,8 +194,204 @@
     {
       "idx": 27,
       "version": "7",
-      "when": 1744364803533,
-      "tag": "0027_mixed_albert_cleary",
+      "when": 1744361602303,
+      "tag": "0027_cheerful_lionheart",
+      "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1744361855213,
+      "tag": "0028_flippant_crystal",
+      "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1745307862006,
+      "tag": "0029_orange_morlun",
+      "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1745396949200,
+      "tag": "0030_dry_darkhawk",
+      "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1745397028889,
+      "tag": "0031_ordinary_weapon_omega",
+      "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1745398813032,
+      "tag": "0032_bouncy_malcolm_colcord",
+      "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1745398878813,
+      "tag": "0033_odd_nomad",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1745399334914,
+      "tag": "0034_needy_turbo",
+      "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1745399357168,
+      "tag": "0035_groovy_kree",
+      "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1745399523901,
+      "tag": "0036_groovy_mastermind",
+      "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1745405983245,
+      "tag": "0037_overconfident_bucky",
+      "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "7",
+      "when": 1745406021805,
+      "tag": "0038_handy_gideon",
+      "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "7",
+      "when": 1745406058660,
+      "tag": "0039_dark_micromax",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1745406151427,
+      "tag": "0040_overconfident_micromax",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "7",
+      "when": 1745488033429,
+      "tag": "0041_breezy_lila_cheney",
+      "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "7",
+      "when": 1745908403500,
+      "tag": "0042_late_scream",
+      "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "7",
+      "when": 1746003517418,
+      "tag": "0043_uneven_sharon_ventura",
+      "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "7",
+      "when": 1746083030186,
+      "tag": "0044_rapid_xorn",
+      "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "7",
+      "when": 1746157339747,
+      "tag": "0045_outgoing_gwen_stacy",
+      "breakpoints": true
+    },
+    {
+      "idx": 46,
+      "version": "7",
+      "when": 1746413170736,
+      "tag": "0046_grey_gladiator",
+      "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "7",
+      "when": 1746416740177,
+      "tag": "0047_tricky_vargas",
+      "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "7",
+      "when": 1746416846907,
+      "tag": "0048_flowery_inertia",
+      "breakpoints": true
+    },
+    {
+      "idx": 49,
+      "version": "7",
+      "when": 1746416917441,
+      "tag": "0049_fine_infant_terrible",
+      "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "7",
+      "when": 1746416973529,
+      "tag": "0050_windy_daimon_hellstrom",
+      "breakpoints": true
+    },
+    {
+      "idx": 51,
+      "version": "7",
+      "when": 1746417063890,
+      "tag": "0051_talented_catseye",
+      "breakpoints": true
+    },
+    {
+      "idx": 52,
+      "version": "7",
+      "when": 1746493217827,
+      "tag": "0052_left_matthew_murdock",
+      "breakpoints": true
+    },
+    {
+      "idx": 53,
+      "version": "7",
+      "when": 1746517449095,
+      "tag": "0053_open_paladin",
+      "breakpoints": true
+    },
+    {
+      "idx": 54,
+      "version": "7",
+      "when": 1746522279114,
+      "tag": "0054_absent_epoch",
+      "breakpoints": true
+    },
+    {
+      "idx": 55,
+      "version": "7",
+      "when": 1746949408165,
+      "tag": "0055_rapid_santa_claus",
       "breakpoints": true
     }
   ]
