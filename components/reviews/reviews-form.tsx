@@ -88,7 +88,7 @@ export default function ReviewsForm() {
                             <FormItem>
                                 <FormLabel>Leave your review</FormLabel>
                                 <FormControl>
-                                    <Textarea placeholder='How would you describe this product?' {...field} />
+                                    <Textarea {...field} placeholder='How would you describe this product?' />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -98,7 +98,7 @@ export default function ReviewsForm() {
                             <FormItem>
                                 <FormLabel>Leave your Rating</FormLabel>
                                 <FormControl>
-                                    <Input type='hidden' placeholder='Star Rating' {...field} />
+                                    <Input {...field} type='hidden' placeholder='Star Rating' />
                                 </FormControl>
                                 <div className='flex'>
                                     {[1,2,3,4,5].map((value) => {

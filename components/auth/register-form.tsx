@@ -133,8 +133,8 @@ export const RegisterForm = () => {
                     <FormControl>
                         <div className="relative w-full">
                             <Input
-                                className="pr-5"
                                 {...field}
+                                className="pr-5"
                                 placeholder="*********"
                                 type={showPassword ? "text" : "password"}
                                 autoComplete="current-password"

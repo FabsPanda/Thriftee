@@ -55,6 +55,7 @@ export default function SettingsCard({ sessionUser }: any) {
       isTwoFactorEnabled: sessionUser.twoFactorEnabled || undefined,
     },
   });
+  console.log(sessionUser.isOAuth)
   const { execute, status } = useAction(settings, {
     onSuccess: (data) => {
       if (data.data?.success) {
@@ -122,9 +123,9 @@ export default function SettingsCard({ sessionUser }: any) {
                   <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input
+                      {...field}
                       placeholder="John Doe"
                       disabled={status === "executing"}
-                      {...field}
                     />
                   </FormControl>
                   <FormDescription>
@@ -184,10 +185,10 @@ export default function SettingsCard({ sessionUser }: any) {
                   </div>
                   <FormControl>
                     <Input
+                      {...field}
                       placeholder="User Image"
                       type="hidden"
                       disabled={status === "executing"}
-                      {...field}
                     />
                   </FormControl>
 
@@ -204,12 +205,12 @@ export default function SettingsCard({ sessionUser }: any) {
                   <FormControl>
                     <div className="relative w-full">
                         <Input
+                        {...field}
                         placeholder="********"
                         disabled={
                             status === "executing" || sessionUser.isOAuth
                         }
                         type={showPassword ? "text" : "password"}
-                        {...field}
                         />
                         <div
                             className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground"
@@ -232,12 +233,12 @@ export default function SettingsCard({ sessionUser }: any) {
                     <FormControl>
                     <div className="relative w-full">
                         <Input
+                        {...field}
                         placeholder="********"
                         disabled={
                             status === "executing" || sessionUser.isOAuth
                         }
                         type={showNewPassword ? "text" : "password"}
-                        {...field}
                         />
                         <div
                             className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground"

@@ -164,7 +164,7 @@ export const LoginForm = () => {
                   <FormItem>
                     <FormLabel>Enter 6-digit code sent to your email</FormLabel>
                     <FormControl>
-                      <InputOTP maxLength={6} {...field} disabled={status === "executing"}>
+                      <InputOTP {...field} maxLength={6} disabled={status === "executing"}>
                         <InputOTPGroup>
                           <InputOTPSlot index={0} />
                           <InputOTPSlot index={1} />
@@ -208,8 +208,8 @@ export const LoginForm = () => {
                         <FormControl>
                             <div className="relative w-full">
                                 <Input
-                                    className="pr-5"
                                     {...field}
+                                    className="pr-5"
                                     placeholder="*********"
                                     type={showPassword ? "text" : "password"}
                                     autoComplete="current-password"
