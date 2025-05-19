@@ -12,15 +12,15 @@ import { authClient } from "@/lib/auth-client";
 // const actionClient = createSafeActionClient();
 
 export const reset = actionClient.schema(ResetSchema).action(async ({ parsedInput }) => {
-    // const { email } = parsedInput;
+    const { email } = parsedInput;
   
-    // const existingUser = await db.query.user.findFirst({
-    //   where: eq(user.email, email),
-    // });
+    const existingUser = await db.query.user.findFirst({
+      where: eq(user.email, email),
+    });
   
-    // if (!existingUser) {
-    //   return { error: "User not found!" };
-    // }
+    if (!existingUser) {
+      return { error: "User not found!" };
+    }
   
     // const tokenRecord = await generatePasswordResetToken(email);
   
@@ -29,8 +29,7 @@ export const reset = actionClient.schema(ResetSchema).action(async ({ parsedInpu
     // }
   
     const { error } = await authClient.forgetPassword({
-        // email: tokenRecord.email,
-        email: "ignadrianw@gmail.com",
+        email: email,
         redirectTo: "/auth/new-password",
     });
 

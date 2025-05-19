@@ -98,7 +98,7 @@ export const RegisterForm = () => {
                   <FormItem>
                     <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="krisdy123" type="text" />
+                      <Input {...field} placeholder="thriftee123" type="text" />
                     </FormControl>
                     <FormDescription />
                     <FormMessage />
@@ -114,7 +114,7 @@ export const RegisterForm = () => {
                     <FormControl>
                       <Input
                         {...field}
-                        placeholder="krisdy@gmail.com"
+                        placeholder="thriftee@email.com"
                         type="email"
                         autoComplete="email"
                       />

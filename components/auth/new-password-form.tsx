@@ -21,7 +21,7 @@ import { useState } from "react";
 import { FormSuccess } from "./form-success";
 import { FormError } from "./form-error";
 import { NewPasswordSchema } from "@/types/new-password-schema";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import {
   Card,
@@ -45,7 +45,10 @@ export const NewPasswordForm = () => {
   const token = searchParams.get("token");
   const tokenError = searchParams.get("error");
 
+  const router = useRouter();
+
   const onSubmit = async (values: z.infer<typeof NewPasswordSchema>) => {
+
     if (!token) {
       setError("Invalid or missing token.");
       return;
@@ -62,6 +65,9 @@ export const NewPasswordForm = () => {
       setError("Something went wrong. Please try again.");
     } else {
       setSuccess("Password has been reset successfully.");
+      setTimeout(() => {
+        router.push("/auth/login");
+      }, 3000);
     }
   };
 
@@ -118,11 +124,8 @@ export const NewPasswordForm = () => {
               />
               <FormSuccess message={success} />
               <FormError message={error} />
-              <Button size={"sm"} variant={"link"} asChild>
-                <Link href="/auth/reset">Forgot your password</Link>
-              </Button>
             </div>
-            <Button type="submit" className={cn("w-full")}>
+            <Button type="submit" className={cn("w-full mt-4")}>
               Reset Password
             </Button>
           </form>

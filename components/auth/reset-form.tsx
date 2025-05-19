@@ -37,10 +37,8 @@ export const ResetForm = () => {
 
   const { execute, status } = useAction(reset, {
     onSuccess(data){
-      console.log(data)
       if(data.data?.success) {
         setSuccess(data.data.success);
-        console.log("AWd");
       }
     }
   });
@@ -50,7 +48,7 @@ export const ResetForm = () => {
   };
   return (
     <AuthCard
-      cardTitle="Enter a new password"
+      cardTitle="Enter your email account"
       backButtonHref="/auth/login"
       backButtonLabel="Back to login"
       showSocials
@@ -64,7 +62,7 @@ export const ResetForm = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -81,14 +79,11 @@ export const ResetForm = () => {
               />
               <FormSuccess message={success}/>
               <FormError message={error}/>
-              <Button size={"sm"} variant={"link"} asChild>
-                <Link href="/auth/reset">Forgot your password</Link>
-              </Button>
             </div>
             <Button
               type="submit"
               className={cn(
-                "w-full",
+                "w-full mt-4",
                 status === "executing" ? "animate-pulse" : ""
               )}
             >
