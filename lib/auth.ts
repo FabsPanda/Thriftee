@@ -66,7 +66,9 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET! as string,
       redirectURI: process.env.BASE_URL + "/api/auth/callback/google",
     },
-    
+  },
+  emailAndPassword: {
+    enabled: true,
   },
   // user: {
   //   additionalFields: {
