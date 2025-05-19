@@ -23,7 +23,7 @@ export default async function Settings() {
                 where: eq(account.userId, currUser.id),
               });
               const isOAuthUser = socialLogon?.providerId === "google";
-              console.log(socialLogon?.providerId);
+            //   console.log(socialLogon);
       
               return <SettingsCard sessionUser={{ ...currUser, isOAuth: isOAuthUser }} />;
         }
