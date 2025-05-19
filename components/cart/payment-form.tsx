@@ -73,7 +73,8 @@ export default function PaymentForm({ totalPrice }: {totalPrice: number}) {
             })),
         })
         if(result?.data?.error) {
-            console.log(result.data.error)
+            console.log(result.data.error);
+            toast.error(result.data.error);
             setErrorMessage(result.data.error);
             setIsLoading(false);
             return;

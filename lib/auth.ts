@@ -95,8 +95,7 @@ export const auth = betterAuth({
       const modifiedUrl = new URL(url);
       modifiedUrl.searchParams.set("callbackURL", callbackUrl);
       await sendEmail({
-        // to: user.email,
-        to: "ignadrianw@gmail.com",
+        to: user.email,
         subject: "Thriftee - Email Verification",
         text: `Click the link to verify your email: ${modifiedUrl.toString()}`,
         html: `<p>Click <a href="${modifiedUrl.toString()}">here</a> to verify your email.</p>`,
